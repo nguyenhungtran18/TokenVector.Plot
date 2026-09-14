@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <LangVersion>12.0</LangVersion>
+    <RootNamespace>TokenVector.Plot</RootNamespace>
+    <AssemblyName>TokenVector.Plot</AssemblyName>
+    <Version>1.0.0</Version>
+    <PackageId>TokenVector.Plot</PackageId>
+    <Title>TokenVector.Plot - Scientific Visualization &amp; High-Performance Graphics Engine</Title>
+    <Authors>TokenVector Architecture Team</Authors>
+    <Company>TokenVector</Company>
+    <Description>Headless High-Performance Scientific Visualization and Graphics Engine for TokenVector with SIMD AVX2 acceleration, Zero-GC allocation, and 100% pure C# Vector/Raster rendering.</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>plotting;visualization;graphics;headless;scientific;simd;vector;svg;rasterizer;webgl;tokenvector;chart</PackageTags>
+    <DefaultItemExcludes>$(DefaultItemExcludes);tests\**;benchmarks\**</DefaultItemExcludes>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="D:\TokenVector Numerics\src\TokenVector.Numerics\TokenVector.Numerics.csproj" />
+    <ProjectReference Include="D:\TokenVector.Data\src\TokenVector.Data\TokenVector.Data.csproj" />
+  </ItemGroup>
+
+</Project>
