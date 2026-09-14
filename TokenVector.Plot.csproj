@@ -17,6 +17,9 @@
     <Description>Headless High-Performance Scientific Visualization and Graphics Engine for TokenVector with SIMD AVX2 acceleration, Zero-GC allocation, and 100% pure C# Vector/Raster rendering.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>plotting;visualization;graphics;headless;scientific;simd;vector;svg;rasterizer;webgl;tokenvector;chart</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/nguyenhungtran18/TokenVector.Plot</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/nguyenhungtran18/TokenVector.Plot</PackageProjectUrl>
     <DefaultItemExcludes>$(DefaultItemExcludes);tests\**;benchmarks\**</DefaultItemExcludes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -24,6 +27,10 @@
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="D:\TokenVector Numerics\src\TokenVector.Numerics\TokenVector.Numerics.csproj" />
