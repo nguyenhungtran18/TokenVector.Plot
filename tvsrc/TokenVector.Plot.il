@@ -1532,7 +1532,7 @@
   .method public static int32 '_hex_byte'(string 'hex_str', int32 'start') cil managed
   {
     .maxstack 11
-    .locals init (string 'sub', int32 '__slice2689098843936_start', valuetype TkvInt 'val', int32 'i', string 'ch', valuetype TkvInt 'cval', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'sub', int32 '__slice2081116260128_start', valuetype TkvInt 'val', int32 'i', string 'ch', valuetype TkvInt 'cval', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 1
     stloc.s 1
     ldarg.s 0
@@ -1746,7 +1746,7 @@
   .method public static class Color 'color_from_hex'(string 'hex_str') cil managed
   {
     .maxstack 12
-    .locals init (string 'clean', int32 '__slice2689098573248_start', int32 'ln', int32 'r', int32 'g', int32 'b', int32 'a', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'clean', int32 '__slice2081115989440_start', int32 'ln', int32 'r', int32 'g', int32 'b', int32 'a', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     stloc.s 0
     ldarg.s 0
@@ -1823,7 +1823,7 @@
   .method public static string '_byte_to_hex'(int32 'b') cil managed
   {
     .maxstack 10
-    .locals init (int32 'v', int32 'hi', int32 '__idiv2689098578848_a', int32 '__idiv2689098578848_b', int32 '__idiv2689098578848_q', int32 '__idiv2689098578848_r', int32 'lo', int32 '__idiv2689098578928_a', int32 '__idiv2689098578928_b', int32 '__idiv2689098578928_q', int32 '__idiv2689098578928_r', string 'digits', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (int32 'v', int32 'hi', int32 '__idiv2081115995040_a', int32 '__idiv2081115995040_b', int32 '__idiv2081115995040_q', int32 '__idiv2081115995040_r', int32 'lo', int32 '__idiv2081115995120_a', int32 '__idiv2081115995120_b', int32 '__idiv2081115995120_q', int32 '__idiv2081115995120_r', string 'digits', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     stloc.s 0
     ldloc.s 0
@@ -1931,7 +1931,7 @@
   .method public static string 'color_to_rgba_str'(class Color 'c') cil managed
   {
     .maxstack 10
-    .locals init (float64 'alpha', int32 '__strtmp2689098579408', int32 '__strtmp2689098579568', int32 '__strtmp2689098579728', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (float64 'alpha', int32 '__strtmp2081115995600', int32 '__strtmp2081115995760', int32 '__strtmp2081115995920', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     ldfld int32 Color::'a'
     conv.r8
@@ -2481,7 +2481,7 @@
   .method public static int32 'svg_draw_rect'(class SvgRenderer 'svg', float64 'x', float64 'y', float64 'width', float64 'height', class Color 'fill', class Color 'stroke', float64 'stroke_width') cil managed
   {
     .maxstack 10
-    .locals init (string 'line', float64 '__strtmp2689098607216', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist5', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'line', float64 '__strtmp2081116023408', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist5', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldstr "<rect x=\""
     ldarg.s 1
     call string TkvStr::F64(float64)
@@ -2785,7 +2785,7 @@
   .method public static int32 'svg_draw_polyline'(class SvgRenderer 'svg', class [mscorlib]System.Collections.Generic.List`1<float64> 'xs', class [mscorlib]System.Collections.Generic.List`1<float64> 'ys', class Color 'stroke', float64 'stroke_width') cil managed
   {
     .maxstack 10
-    .locals init (int32 'n', string 'pts', int32 'i', float64 '__strtmp2689100140512', float64 '__strtmp2689100140672', string 'line', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist9', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (int32 'n', string 'pts', int32 'i', float64 '__strtmp2081117556704', float64 '__strtmp2081117556864', string 'line', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist9', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 1
     callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
     stloc.s 0
@@ -2870,7 +2870,7 @@
   .method public static string 'svg_build'(class SvgRenderer 'svg') cil managed
   {
     .maxstack 10
-    .locals init (string 'w_str', float64 '__strtmp2689100146832', string 'h_str', float64 '__strtmp2689100146672', string 'res', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist10', int32 'i', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist11', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'w_str', float64 '__strtmp2081117563024', string 'h_str', float64 '__strtmp2081117562864', string 'res', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist10', int32 'i', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist11', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     ldfld float64 SvgRenderer::'width'
     call string TkvStr::F64(float64)
