@@ -2,6 +2,9 @@
 
 <div align="center">
 
+<img src="logo.png" alt="TokenVector.Plot Logo" width="120" height="120" />
+
+
 **Động cơ Đồ họa & Trực quan hóa Dữ liệu Khoa học Headless Hiệu năng cao cho .NET 8 / 9 & Ngôn ngữ TokenVector**  
 *Tăng tốc SIMD AVX2 • Zero-GC Hot-Path • Chuẩn xuất bản Nature/IEEE • Ngôn ngữ Thuần TokenVector & CIL .NET*
 
@@ -10,7 +13,7 @@
 [![TokenVector Language](https://img.shields.io/badge/Ng%C3%B4n%20ng%E1%BB%AF-TokenVector%20(.tkv)-orange.svg)](https://github.com/nguyenhungtran18/TokenVector)
 [![Zero-GC](https://img.shields.io/badge/HotPath-Zero--GC-brightgreen.svg)]()
 [![Headless](https://img.shields.io/badge/Engine-100%25%20Headless-success.svg)]()
-[![NuGet Package](https://img.shields.io/badge/NuGet-TokenVector.Plot%20v1.0.0-blue.svg)](packages/)
+[![NuGet Package](https://img.shields.io/badge/NuGet-TokenVector.Plot%20v1.0.1-blue.svg)](packages/)
 
 </div>
 
@@ -18,7 +21,7 @@
 
 ## 🌐 Nền Tảng Ngôn Ngữ & Hệ Sinh Thái TokenVector
 
-`TokenVector.Plot` là **Ưu tiên 5 - Scientific Visualization & Graphics Engine** chính thức thuộc **Nền tảng Ngôn ngữ Lập trình & Hệ sinh thái AI TokenVector**, được port và hiện thực trực tiếp bằng **ngôn ngữ TokenVector (`.tkv`)**, biên dịch ra assembly CIL quản lý (`TokenVector.Plot.dll`) và đóng gói thành gói NuGet chuẩn `TokenVector.Plot.1.0.0.nupkg`.
+`TokenVector.Plot` là **Ưu tiên 5 - Scientific Visualization & Graphics Engine** chính thức thuộc **Nền tảng Ngôn ngữ Lập trình & Hệ sinh thái AI TokenVector**, được port và hiện thực trực tiếp bằng **ngôn ngữ TokenVector (`.tkv`)**, biên dịch ra assembly CIL quản lý (`TokenVector.Plot.dll`) và đóng gói thành gói NuGet chuẩn `TokenVector.Plot.1.0.1.nupkg`.
 
 ### ⚡ 1. Ngôn Ngữ Lập Trình TokenVector (`TokenVector` / `tkvc`)
 **TokenVector** (`.tkv`) là ngôn ngữ lập trình biên dịch tự lưu trữ (self-hosted) hiệu năng cao, được thiết kế nhằm thay thế hoàn toàn Python trong tính toán khoa học, AI và lập trình hệ thống:
@@ -40,7 +43,7 @@
 ## 🌟 Điểm Nổi Bật của TokenVector.Plot
 
 - **Hiện thực hoàn toàn bằng ngôn ngữ TokenVector (`tvsrc/*.tkv`):** Toàn bộ lõi đồ họa, chuyển đổi tọa độ, màu sắc, phân tích trục tọa độ và kết xuất SVG được viết bằng `.tkv`.
-- **Sẵn sàng cho .NET Assembly (`TokenVector.Plot.dll`) & NuGet (`TokenVector.Plot.1.0.0.nupkg`):** Tích hợp trực tiếp vào các ứng dụng C#, F#, VB.NET.
+- **Sẵn sàng cho .NET Assembly (`TokenVector.Plot.dll`) & NuGet (`TokenVector.Plot.1.0.1.nupkg`):** Tích hợp trực tiếp vào các ứng dụng C#, F#, VB.NET.
 - **100% Headless thuần túy:** Hoàn toàn không phụ thuộc `System.Drawing.Common`, GDI+, SkiaSharp native C++ binaries, X11, Wayland hay `xvfb`.
 - **Đa dạng thể loại biểu đồ:** Biểu đồ đường (Line Plot), điểm phân tán (Scatter), biểu đồ cột (Bar Histogram), ma trận nhiệt (Heatmap 2D), biểu đồ hộp râu (Box Plot), khung chú giải tự động (Auto-Legend) và HTML tương tác.
 - **Chuẩn phong cách xuất bản Nature / Science:** Tích hợp các bộ màu chuyên nghiệp (`Viridis`) và phong cách định dạng đồ thị xuất bản.

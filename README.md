@@ -2,6 +2,9 @@
 
 <div align="center">
 
+<img src="logo.png" alt="TokenVector.Plot Logo" width="120" height="120" />
+
+
 **Headless High-Performance Scientific Visualization & Graphics Engine for .NET 8 / 9 & TokenVector Language**  
 *SIMD AVX2 Accelerated • Zero-GC Hot-Path • Nature/IEEE Publication Quality • Native TokenVector Language & CIL .NET*
 
@@ -10,7 +13,7 @@
 [![TokenVector Language](https://img.shields.io/badge/Language-TokenVector%20(.tkv)-orange.svg)](https://github.com/nguyenhungtran18/TokenVector)
 [![Zero-GC](https://img.shields.io/badge/HotPath-Zero--GC-brightgreen.svg)]()
 [![Headless](https://img.shields.io/badge/Engine-100%25%20Headless-success.svg)]()
-[![NuGet Package](https://img.shields.io/badge/NuGet-TokenVector.Plot%20v1.0.0-blue.svg)](packages/)
+[![NuGet Package](https://img.shields.io/badge/NuGet-TokenVector.Plot%20v1.0.1-blue.svg)](packages/)
 
 </div>
 
@@ -18,7 +21,7 @@
 
 ## 🌐 The TokenVector Language & Ecosystem Platform
 
-`TokenVector.Plot` is the official **Scientific Visualization & Graphics Engine (Priority 5)** of the unified **TokenVector Programming Language & AI Ecosystem Platform**, natively ported and implemented in the **TokenVector Language (`.tkv`)** and compiled directly to managed CIL (`TokenVector.Plot.dll`) and packaged into `TokenVector.Plot.1.0.0.nupkg`.
+`TokenVector.Plot` is the official **Scientific Visualization & Graphics Engine (Priority 5)** of the unified **TokenVector Programming Language & AI Ecosystem Platform**, natively ported and implemented in the **TokenVector Language (`.tkv`)** and compiled directly to managed CIL (`TokenVector.Plot.dll`) and packaged into `TokenVector.Plot.1.0.1.nupkg`.
 
 ### ⚡ 1. The TokenVector Programming Language (`TokenVector` / `tkvc`)
 **TokenVector** (`.tkv`) is a self-hosted, compiled high-performance programming language designed to replace Python in high-performance computing, AI, and systems programming:
@@ -40,7 +43,7 @@
 ## 🌟 Key Highlights of TokenVector.Plot
 
 - **Pure Native TokenVector Language Implementation (`tvsrc/*.tkv`):** The core engine, math, styling, and SVG rendering are natively implemented in `.tkv`.
-- **Pre-Compiled .NET Assembly (`TokenVector.Plot.dll`) & NuGet Package (`TokenVector.Plot.1.0.0.nupkg`):** Seamless drop-in dependency for C#, F#, and .NET applications.
+- **Pre-Compiled .NET Assembly (`TokenVector.Plot.dll`) & NuGet Package (`TokenVector.Plot.1.0.1.nupkg`):** Seamless drop-in dependency for C#, F#, and .NET applications.
 - **100% Headless Architecture:** Zero dependencies on `System.Drawing.Common`, GDI+, SkiaSharp native binaries, X11, Wayland, or `xvfb`.
 - **Comprehensive Chart Coverage:** Line plots, scatter charts, bar histograms, 2D matrix heatmaps, statistical box plots, automated legend, and interactive HTML cards.
 - **Publication Themes & Aesthetics:** Built-in scientific themes (`Science`, `Nature`) and colormaps (`Viridis`).
