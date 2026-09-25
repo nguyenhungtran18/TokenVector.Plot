@@ -1,0 +1,499 @@
+# -*- coding: utf-8 -*-
+# =============================================================================
+# TokenVector.Plot - Combined Library Source for Assembly Packaging
+# =============================================================================
+# ----------------------------- Color (RGBA) ----------------------------------
+class Color:
+    r: "i32"
+    g: "i32"
+    b: "i32"
+    a: "i32"
+
+
+def make_color(r: "i32", g: "i32", b: "i32", a: "i32" = 255) -> "Color":
+    return Color(r, g, b, a)
+
+
+def color_transparent() -> "Color":
+    return make_color(0, 0, 0, 0)
+
+def color_black() -> "Color":
+    return make_color(0, 0, 0, 255)
+
+def color_white() -> "Color":
+    return make_color(255, 255, 255, 255)
+
+def color_red() -> "Color":
+    return make_color(235, 64, 52, 255)
+
+def color_green() -> "Color":
+    return make_color(46, 204, 113, 255)
+
+def color_blue() -> "Color":
+    return make_color(52, 152, 219, 255)
+
+def color_gray() -> "Color":
+    return make_color(128, 128, 128, 255)
+
+def color_light_gray() -> "Color":
+    return make_color(220, 220, 220, 255)
+
+def color_dark_gray() -> "Color":
+    return make_color(50, 50, 50, 255)
+
+
+def _hex_byte(hex_str: "str", start: "i32") -> "i32":
+    sub = hex_str[start:start + 2].lower()
+    val = 0
+    for i in range(2):
+        ch = sub[i]
+        cval = 0
+        if ch >= "0" and ch <= "9":
+            cval = int(ch)
+        elif ch == "a":
+            cval = 10
+        elif ch == "b":
+            cval = 11
+        elif ch == "c":
+            cval = 12
+        elif ch == "d":
+            cval = 13
+        elif ch == "e":
+            cval = 14
+        elif ch == "f":
+            cval = 15
+        val = val * 16 + cval
+    return val
+
+
+def color_from_hex(hex_str: "str") -> "Color":
+    clean = hex_str
+    if hex_str.startswith("#"):
+        clean = hex_str[1:]
+    ln = len(clean)
+    if ln == 6:
+        r = _hex_byte(clean, 0)
+        g = _hex_byte(clean, 2)
+        b = _hex_byte(clean, 4)
+        return make_color(r, g, b, 255)
+    if ln == 8:
+        r = _hex_byte(clean, 0)
+        g = _hex_byte(clean, 2)
+        b = _hex_byte(clean, 4)
+        a = _hex_byte(clean, 6)
+        return make_color(r, g, b, a)
+    return color_black()
+
+
+def _byte_to_hex(b: "i32") -> "str":
+    v = b
+    if v < 0:
+        v = 0
+    if v > 255:
+        v = 255
+    hi = v // 16
+    lo = v % 16
+    digits = "0123456789ABCDEF"
+    return digits[hi] + digits[lo]
+
+
+def color_to_hex(c: "Color") -> "str":
+    return "#" + _byte_to_hex(c.r) + _byte_to_hex(c.g) + _byte_to_hex(c.b)
+
+
+def color_to_rgba_str(c: "Color") -> "str":
+    alpha = float(c.a) / 255.0
+    return "rgba(" + str(c.r) + "," + str(c.g) + "," + str(c.b) + "," + str(alpha) + ")"
+
+
+# ----------------------------- ColorMap ---------------------------------------
+class ColorMap:
+    name: "str"
+    stops: "list[Color]"
+
+
+def make_colormap(name: "str", stops: "list[Color]") -> "ColorMap":
+    cm = ColorMap(name)
+    cm.name = name
+    cm.stops = stops
+    return cm
+
+
+def _lerp_f(a: "f64", b: "f64", t: "f64") -> "f64":
+    return a + (b - a) * t
+
+
+def colormap_sample(cm: "ColorMap", t: "f64") -> "Color":
+    clamped_t = t
+    if clamped_t < 0.0:
+        clamped_t = 0.0
+    if clamped_t > 1.0:
+        clamped_t = 1.0
+    n = len(cm.stops)
+    if n == 0:
+        return color_black()
+    if n == 1:
+        return cm.stops[0]
+    scaled = clamped_t * float(n - 1)
+    idx = int(scaled)
+    if idx >= n - 1:
+        return cm.stops[n - 1]
+    frac = scaled - float(idx)
+    c1 = cm.stops[idx]
+    c2 = cm.stops[idx + 1]
+    r = int(_lerp_f(float(c1.r), float(c2.r), frac))
+    g = int(_lerp_f(float(c1.g), float(c2.g), frac))
+    b = int(_lerp_f(float(c1.b), float(c2.b), frac))
+    a = int(_lerp_f(float(c1.a), float(c2.a), frac))
+    return make_color(r, g, b, a)
+
+
+def get_viridis_colormap() -> "ColorMap":
+    stops = [
+        color_from_hex("#440154"),
+        color_from_hex("#482878"),
+        color_from_hex("#3E4A89"),
+        color_from_hex("#31688E"),
+        color_from_hex("#26828E"),
+        color_from_hex("#1F9E89"),
+        color_from_hex("#35B779"),
+        color_from_hex("#6DCD59"),
+        color_from_hex("#B4DE2C"),
+        color_from_hex("#FDE725"),
+    ]
+    return make_colormap("Viridis", stops)
+
+
+# ----------------------------- StyleTheme -------------------------------------
+class StyleTheme:
+    name: "str"
+    bg_color: "Color"
+    plot_area_color: "Color"
+    axis_color: "Color"
+    grid_color: "Color"
+    text_color: "Color"
+    title_color: "Color"
+    legend_bg: "Color"
+    legend_border: "Color"
+    axis_line_width: "f64"
+    grid_line_width: "f64"
+    show_major_grid: "i32"
+    show_minor_grid: "i32"
+    title_font_size: "f64"
+    axis_label_font_size: "f64"
+    tick_label_font_size: "f64"
+    legend_font_size: "f64"
+    font_family: "str"
+    palette: "list[Color]"
+
+
+def make_theme_science() -> "StyleTheme":
+    t = StyleTheme("Science", color_white(), color_white(), color_from_hex("#111111"), color_from_hex("#E5E5E5"), color_from_hex("#111111"), color_from_hex("#000000"), make_color(255, 255, 255, 230), color_from_hex("#BDC3C7"), 1.2, 0.75, 1, 0, 16.0, 12.0, 10.0, 10.0, "Helvetica, Arial, sans-serif")
+    t.palette = [
+        color_from_hex("#0C5DA5"),
+        color_from_hex("#00B945"),
+        color_from_hex("#FF9500"),
+        color_from_hex("#FF2C00"),
+    ]
+    return t
+
+
+def make_theme_nature() -> "StyleTheme":
+    t = StyleTheme("Nature", color_white(), color_white(), color_from_hex("#222222"), color_from_hex("#ECECEC"), color_from_hex("#222222"), color_from_hex("#111111"), make_color(255, 255, 255, 240), color_from_hex("#D0D0D0"), 1.0, 0.5, 1, 0, 15.0, 11.5, 9.5, 9.5, "Arial, Helvetica, sans-serif")
+    t.palette = [
+        color_from_hex("#E64B35"),
+        color_from_hex("#4DBBD5"),
+        color_from_hex("#00A087"),
+    ]
+    return t
+
+
+# ----------------------------- CoordinateTransform ---------------------------
+SCALE_LINEAR = 0
+SCALE_LOG10 = 1
+
+class CoordinateTransform:
+    scale: "i32"
+    data_min: "f64"
+    data_max: "f64"
+    target_min: "f64"
+    target_max: "f64"
+    trans_min: "f64"
+    trans_max: "f64"
+    trans_range: "f64"
+    target_range: "f64"
+
+
+def make_coord_transform(scale: "i32", data_min: "f64", data_max: "f64", target_min: "f64", target_max: "f64") -> "CoordinateTransform":
+    rg = data_max - data_min
+    if rg < 0.0:
+        rg = -rg
+    if rg < 0.000000000001:
+        rg = 1.0
+    t_rg = target_max - target_min
+    return CoordinateTransform(scale, data_min, data_max, target_min, target_max, data_min, data_max, rg, t_rg)
+
+
+def transform_to_target(ct: "CoordinateTransform", data_val: "f64") -> "f64":
+    norm = (data_val - ct.trans_min) / ct.trans_range
+    return ct.target_min + norm * ct.target_range
+
+
+def transform_to_data(ct: "CoordinateTransform", target_val: "f64") -> "f64":
+    norm = (target_val - ct.target_min) / ct.target_range
+    return ct.trans_min + norm * ct.trans_range
+
+
+# ----------------------------- TicksEngine ------------------------------------
+class Tick:
+    position: "f64"
+    label: "str"
+    is_major: "i32"
+
+
+def make_tick(pos: "f64", label: "str", is_major: "i32" = 1) -> "Tick":
+    return Tick(pos, label, is_major)
+
+
+def ticks_generate_linear(min_val: "f64", max_val: "f64", target_count: "i32" = 6) -> "list[Tick]":
+    ticks = []
+    diff = max_val - min_val
+    if diff < 0.0:
+        diff = -diff
+    if diff < 0.000000000001:
+        ticks.append(make_tick(min_val, str(min_val), 1))
+        return ticks
+
+    lo = min_val
+    hi = max_val
+    if lo > hi:
+        tmp = lo
+        lo = hi
+        hi = tmp
+
+    step = (hi - lo) / float(target_count - 1)
+    for i in range(target_count):
+        val = lo + float(i) * step
+        ticks.append(make_tick(val, str(val), 1))
+    return ticks
+
+
+# ----------------------------- SvgRenderer -----------------------------------
+class SvgRenderer:
+    width: "f64"
+    height: "f64"
+    dpi: "f64"
+    body: "list[str]"
+
+
+def make_svg_renderer(width: "f64", height: "f64", dpi: "f64" = 300.0) -> "SvgRenderer":
+    return SvgRenderer(width, height, dpi)
+
+
+def svg_draw_rect(svg: "SvgRenderer", x: "f64", y: "f64", width: "f64", height: "f64", fill: "Color", stroke: "Color", stroke_width: "f64" = 1.0) -> "i32":
+    line = "<rect x=\"" + str(x) + "\" y=\"" + str(y) + "\" width=\"" + str(width) + "\" height=\"" + str(height) + "\""
+    if fill.a > 0:
+        line = line + " fill=\"" + color_to_hex(fill) + "\""
+    else:
+        line = line + " fill=\"none\""
+    if stroke.a > 0 and stroke_width > 0.0:
+        line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+    else:
+        line = line + " stroke=\"none\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_line(svg: "SvgRenderer", x1: "f64", y1: "f64", x2: "f64", y2: "f64", stroke: "Color", stroke_width: "f64" = 1.0) -> "i32":
+    if stroke.a == 0:
+        return 0
+    line = "<line x1=\"" + str(x1) + "\" y1=\"" + str(y1) + "\" x2=\"" + str(x2) + "\" y2=\"" + str(y2) + "\""
+    line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\" />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_circle(svg: "SvgRenderer", cx: "f64", cy: "f64", r: "f64", fill: "Color", stroke: "Color", stroke_width: "f64" = 1.0) -> "i32":
+    line = "<circle cx=\"" + str(cx) + "\" cy=\"" + str(cy) + "\" r=\"" + str(r) + "\""
+    if fill.a > 0:
+        line = line + " fill=\"" + color_to_hex(fill) + "\""
+    else:
+        line = line + " fill=\"none\""
+    if stroke.a > 0 and stroke_width > 0.0:
+        line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+    else:
+        line = line + " stroke=\"none\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_text(svg: "SvgRenderer", text: "str", x: "f64", y: "f64", color: "Color", font_size: "f64" = 12.0) -> "i32":
+    if color.a == 0:
+        return 0
+    line = "<text x=\"" + str(x) + "\" y=\"" + str(y) + "\" font-size=\"" + str(font_size) + "px\" fill=\"" + color_to_hex(color) + "\">" + text + "</text>"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_polyline(svg: "SvgRenderer", xs: "list[f64]", ys: "list[f64]", stroke: "Color", stroke_width: "f64" = 1.0) -> "i32":
+    n = len(xs)
+    if n < 2 or stroke.a == 0:
+        return 0
+    pts = ""
+    for i in range(n):
+        if i > 0:
+            pts = pts + " "
+        pts = pts + str(xs[i]) + "," + str(ys[i])
+    line = "<polyline points=\"" + pts + "\" fill=\"none\" stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\" />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_build(svg: "SvgRenderer") -> "str":
+    w_str = str(svg.width)
+    h_str = str(svg.height)
+    res = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"
+    res = res + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"
+    res = res + "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + w_str + "px\" height=\"" + h_str + "px\" viewBox=\"0 0 " + w_str + " " + h_str + "\" version=\"1.1\">\n"
+    for i in range(len(svg.body)):
+        res = res + "  " + svg.body[i] + "\n"
+    res = res + "</svg>\n"
+    return res
+
+
+# ----------------------------- Charts & Figure --------------------------------
+ELEM_LINE = 1
+ELEM_SCATTER = 2
+ELEM_BAR = 3
+
+class PlotElement:
+    kind: "i32"
+    label: "str"
+    visible: "i32"
+    color: "Color"
+    line_width: "f64"
+    xs: "list[f64]"
+    ys: "list[f64]"
+    x_min: "f64"
+    x_max: "f64"
+    y_min: "f64"
+    y_max: "f64"
+    point_size: "f64"
+
+
+def make_line_plot(xs: "list[f64]", ys: "list[f64]", label: "str", c: "Color", width: "f64" = 2.0) -> "PlotElement":
+    xmin = 0.0
+    xmax = 0.0
+    ymin = 0.0
+    ymax = 0.0
+    n = len(xs)
+    if n > 0:
+        xmin = xs[0]
+        xmax = xs[0]
+        ymin = ys[0]
+        ymax = ys[0]
+        for i in range(n):
+            if xs[i] < xmin:
+                xmin = xs[i]
+            if xs[i] > xmax:
+                xmax = xs[i]
+            if ys[i] < ymin:
+                ymin = ys[i]
+            if ys[i] > ymax:
+                ymax = ys[i]
+    elem = PlotElement(ELEM_LINE, label, 1, c, width, xmin, xmax, ymin, ymax, 1.0)
+    elem.xs = xs
+    elem.ys = ys
+    return elem
+
+
+def make_scatter_plot(xs: "list[f64]", ys: "list[f64]", label: "str", c: "Color", point_size: "f64" = 4.0) -> "PlotElement":
+    elem = make_line_plot(xs, ys, label, c, 1.0)
+    elem.kind = ELEM_SCATTER
+    elem.point_size = point_size
+    return elem
+
+
+class Axes2D:
+    title: "str"
+    xlabel: "str"
+    ylabel: "str"
+    elements: "list[PlotElement]"
+
+
+def make_axes2d() -> "Axes2D":
+    return Axes2D("", "", "")
+
+
+def axes2d_add_element(ax: "Axes2D", elem: "PlotElement") -> "i32":
+    ax.elements.append(elem)
+    return 0
+
+
+class Figure:
+    width_inches: "f64"
+    height_inches: "f64"
+    dpi: "f64"
+    theme: "StyleTheme"
+    title: "str"
+    axes: "Axes2D"
+
+
+def make_figure(width_inches: "f64" = 6.4, height_inches: "f64" = 4.8, dpi: "f64" = 300.0) -> "Figure":
+    return Figure(width_inches, height_inches, dpi, make_theme_science(), "", make_axes2d())
+
+
+def figure_to_svg(fig: "Figure") -> "str":
+    px_w = fig.width_inches * fig.dpi
+    px_h = fig.height_inches * fig.dpi
+    svg = make_svg_renderer(px_w, px_h, fig.dpi)
+    th = fig.theme
+    svg_draw_rect(svg, 0.0, 0.0, px_w, px_h, th.bg_color, color_transparent(), 0.0)
+
+    plot_l = 70.0
+    plot_t = 50.0
+    plot_w = px_w - 100.0
+    plot_h = px_h - 110.0
+
+    svg_draw_rect(svg, plot_l, plot_t, plot_w, plot_h, th.plot_area_color, th.axis_color, th.axis_line_width)
+
+    # Compute bounds
+    xmin = 0.0
+    xmax = 1.0
+    ymin = 0.0
+    ymax = 1.0
+    ax = fig.axes
+    elems = ax.elements
+    if len(elems) > 0:
+        e0 = elems[0]
+        xmin = e0.x_min
+        xmax = e0.x_max
+        ymin = e0.y_min
+        ymax = e0.y_max
+
+    tx = make_coord_transform(SCALE_LINEAR, xmin, xmax, plot_l, plot_l + plot_w)
+    ty = make_coord_transform(SCALE_LINEAR, ymin, ymax, plot_t + plot_h, plot_t)
+
+    # Render lines & points
+    for i in range(len(elems)):
+        e = elems[i]
+        if e.kind == ELEM_LINE:
+            pxs = []
+            pys = []
+            for k in range(len(e.xs)):
+                pxs.append(transform_to_target(tx, e.xs[k]))
+                pys.append(transform_to_target(ty, e.ys[k]))
+            svg_draw_polyline(svg, pxs, pys, e.color, e.line_width)
+        elif e.kind == ELEM_SCATTER:
+            for k in range(len(e.xs)):
+                sx = transform_to_target(tx, e.xs[k])
+                sy = transform_to_target(ty, e.ys[k])
+                svg_draw_circle(svg, sx, sy, e.point_size, e.color, color_transparent(), 0.0)
+
+    return svg_build(svg)
+
+
+def run() -> "str":
+    return "LIBOK_PLOT"

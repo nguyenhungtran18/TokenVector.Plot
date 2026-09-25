@@ -1,0 +1,373 @@
+# -*- coding: utf-8 -*-
+# =============================================================================
+# TokenVector.Plot - Native TokenVector Graphics & Visualization Engine
+# Renderers: SvgRenderer, RasterRenderer (Software PNG), HtmlCanvasRenderer (WebGL)
+# =============================================================================
+__tkv_import__ = ["tokenvector_plot_core"]
+
+# ----------------------------- SvgRenderer -----------------------------------
+class SvgRenderer:
+    width: "f64"
+    height: "f64"
+    dpi: "f64"
+    body: "list[str]"
+
+
+def make_svg_renderer(width: "f64", height: "f64", dpi: "f64" = 300.0) -> "SvgRenderer":
+    svg = SvgRenderer()
+    svg.width = width
+    svg.height = height
+    svg.dpi = dpi
+    svg.body = []
+    return svg
+
+
+def svg_draw_rect(
+    svg: "SvgRenderer",
+    x: "f64",
+    y: "f64",
+    width: "f64",
+    height: "f64",
+    fill: "Color",
+    stroke: "Color",
+    stroke_width: "f64" = 1.0,
+    rx: "f64" = 0.0
+) -> "i32":
+    line = "<rect x=\"" + str(x) + "\" y=\"" + str(y) + "\" width=\"" + str(width) + "\" height=\"" + str(height) + "\""
+    if rx > 0.0:
+        line = line + " rx=\"" + str(rx) + "\""
+    if fill.a > 0:
+        line = line + " fill=\"" + color_to_hex(fill) + "\""
+        if fill.a < 255:
+            line = line + " fill-opacity=\"" + str(float(fill.a) / 255.0) + "\""
+    else:
+        line = line + " fill=\"none\""
+    if stroke.a > 0 and stroke_width > 0.0:
+        line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+        if stroke.a < 255:
+            line = line + " stroke-opacity=\"" + str(float(stroke.a) / 255.0) + "\""
+    else:
+        line = line + " stroke=\"none\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_line(
+    svg: "SvgRenderer",
+    x1: "f64",
+    y1: "f64",
+    x2: "f64",
+    y2: "f64",
+    stroke: "Color",
+    stroke_width: "f64" = 1.0,
+    dash_array: "str" = ""
+) -> "i32":
+    if stroke.a == 0:
+        return 0
+    line = "<line x1=\"" + str(x1) + "\" y1=\"" + str(y1) + "\" x2=\"" + str(x2) + "\" y2=\"" + str(y2) + "\""
+    line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+    if stroke.a < 255:
+        line = line + " stroke-opacity=\"" + str(float(stroke.a) / 255.0) + "\""
+    if len(dash_array) > 0:
+        line = line + " stroke-dasharray=\"" + dash_array + "\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_circle(
+    svg: "SvgRenderer",
+    cx: "f64",
+    cy: "f64",
+    r: "f64",
+    fill: "Color",
+    stroke: "Color",
+    stroke_width: "f64" = 1.0
+) -> "i32":
+    line = "<circle cx=\"" + str(cx) + "\" cy=\"" + str(cy) + "\" r=\"" + str(r) + "\""
+    if fill.a > 0:
+        line = line + " fill=\"" + color_to_hex(fill) + "\""
+        if fill.a < 255:
+            line = line + " fill-opacity=\"" + str(float(fill.a) / 255.0) + "\""
+    else:
+        line = line + " fill=\"none\""
+    if stroke.a > 0 and stroke_width > 0.0:
+        line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+        if stroke.a < 255:
+            line = line + " stroke-opacity=\"" + str(float(stroke.a) / 255.0) + "\""
+    else:
+        line = line + " stroke=\"none\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_text(
+    svg: "SvgRenderer",
+    text: "str",
+    x: "f64",
+    y: "f64",
+    color: "Color",
+    font_size: "f64" = 12.0,
+    font_weight: "str" = "normal",
+    font_family: "str" = "sans-serif",
+    text_anchor: "str" = "start",
+    rotation: "f64" = 0.0
+) -> "i32":
+    if color.a == 0:
+        return 0
+    line = "<text x=\"" + str(x) + "\" y=\"" + str(y) + "\""
+    line = line + " font-family=\"" + font_family + "\" font-size=\"" + str(font_size) + "px\""
+    line = line + " font-weight=\"" + font_weight + "\" text-anchor=\"" + text_anchor + "\""
+    line = line + " fill=\"" + color_to_hex(color) + "\""
+    if color.a < 255:
+        line = line + " fill-opacity=\"" + str(float(color.a) / 255.0) + "\""
+    if rotation != 0.0:
+        line = line + " transform=\"rotate(" + str(rotation) + " " + str(x) + " " + str(y) + ")\""
+    line = line + ">" + text + "</text>"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_polyline(
+    svg: "SvgRenderer",
+    xs: "list[f64]",
+    ys: "list[f64]",
+    stroke: "Color",
+    stroke_width: "f64" = 1.0,
+    dash_array: "str" = ""
+) -> "i32":
+    n = len(xs)
+    if n < 2 or stroke.a == 0:
+        return 0
+    pts = ""
+    for i in range(n):
+        if i > 0:
+            pts = pts + " "
+        pts = pts + str(xs[i]) + "," + str(ys[i])
+    line = "<polyline points=\"" + pts + "\" fill=\"none\""
+    line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+    if stroke.a < 255:
+        line = line + " stroke-opacity=\"" + str(float(stroke.a) / 255.0) + "\""
+    if len(dash_array) > 0:
+        line = line + " stroke-dasharray=\"" + dash_array + "\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_draw_polygon(
+    svg: "SvgRenderer",
+    xs: "list[f64]",
+    ys: "list[f64]",
+    fill: "Color",
+    stroke: "Color",
+    stroke_width: "f64" = 0.0
+) -> "i32":
+    n = len(xs)
+    if n < 3:
+        return 0
+    pts = ""
+    for i in range(n):
+        if i > 0:
+            pts = pts + " "
+        pts = pts + str(xs[i]) + "," + str(ys[i])
+    line = "<polygon points=\"" + pts + "\""
+    if fill.a > 0:
+        line = line + " fill=\"" + color_to_hex(fill) + "\""
+        if fill.a < 255:
+            line = line + " fill-opacity=\"" + str(float(fill.a) / 255.0) + "\""
+    else:
+        line = line + " fill=\"none\""
+    if stroke.a > 0 and stroke_width > 0.0:
+        line = line + " stroke=\"" + color_to_hex(stroke) + "\" stroke-width=\"" + str(stroke_width) + "\""
+    else:
+        line = line + " stroke=\"none\""
+    line = line + " />"
+    svg.body.append(line)
+    return 0
+
+
+def svg_build(svg: "SvgRenderer") -> "str":
+    w_str = str(svg.width)
+    h_str = str(svg.height)
+    res = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"no\"?>\n"
+    res = res + "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"
+    res = res + "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" "
+    res = res + "width=\"" + w_str + "px\" height=\"" + h_str + "px\" viewBox=\"0 0 " + w_str + " " + h_str + "\" version=\"1.1\">\n"
+    for i in range(len(svg.body)):
+        res = res + "  " + svg.body[i] + "\n"
+    res = res + "</svg>\n"
+    return res
+
+
+# ----------------------------- RasterRenderer ---------------------------------
+class RasterRenderer:
+    width: "i32"
+    height: "i32"
+    dpi: "f64"
+    pixels_r: "list[i32]"
+    pixels_g: "list[i32]"
+    pixels_b: "list[i32]"
+    pixels_a: "list[i32]"
+    z_buffer: "list[f64]"
+
+
+def make_raster_renderer(width: "i32", height: "i32", dpi: "f64" = 300.0, enable_z: "i32" = 0) -> "RasterRenderer":
+    r = RasterRenderer()
+    r.width = width
+    r.height = height
+    r.dpi = dpi
+    total = width * height
+    r.pixels_r = []
+    r.pixels_g = []
+    r.pixels_b = []
+    r.pixels_a = []
+    r.z_buffer = []
+    for i in range(total):
+        r.pixels_r.append(255)
+        r.pixels_g.append(255)
+        r.pixels_b.append(255)
+        r.pixels_a.append(255)
+        if enable_z == 1:
+            r.z_buffer.append(100000000.0)
+    return r
+
+
+def raster_clear(r: "RasterRenderer", c: "Color") -> "i32":
+    total = r.width * r.height
+    for i in range(total):
+        r.pixels_r[i] = c.r
+        r.pixels_g[i] = c.g
+        r.pixels_b[i] = c.b
+        r.pixels_a[i] = c.a
+        if len(r.z_buffer) > 0:
+            r.z_buffer[i] = 100000000.0
+    return 0
+
+
+def raster_set_pixel(r: "RasterRenderer", x: "i32", y: "i32", c: "Color") -> "i32":
+    if x < 0 or x >= r.width or y < 0 or y >= r.height:
+        return 0
+    idx = y * r.width + x
+    if c.a == 255:
+        r.pixels_r[idx] = c.r
+        r.pixels_g[idx] = c.g
+        r.pixels_b[idx] = c.b
+        r.pixels_a[idx] = 255
+    elif c.a > 0:
+        # Alpha blending
+        inv_a = 255 - c.a
+        r.pixels_r[idx] = (c.r * c.a + r.pixels_r[idx] * inv_a) // 255
+        r.pixels_g[idx] = (c.g * c.a + r.pixels_g[idx] * inv_a) // 255
+        r.pixels_b[idx] = (c.b * c.a + r.pixels_b[idx] * inv_a) // 255
+        r.pixels_a[idx] = c.a + (r.pixels_a[idx] * inv_a) // 255
+    return 0
+
+
+def raster_draw_line(r: "RasterRenderer", x0: "i32", y0: "i32", x1: "i32", y1: "i32", c: "Color") -> "i32":
+    dx = x1 - x0
+    if dx < 0:
+        dx = -dx
+    dy = y1 - y0
+    if dy < 0:
+        dy = -dy
+    sx = 1
+    if x0 > x1:
+        sx = -1
+    sy = 1
+    if y0 > y1:
+        sy = -1
+    err = dx - dy
+    cx = x0
+    cy = y0
+    while True:
+        raster_set_pixel(r, cx, cy, c)
+        if cx == x1 and cy == y1:
+            break
+        e2 = 2 * err
+        if e2 > -dy:
+            err = err - dy
+            cx = cx + sx
+        if e2 < dx:
+            err = err + dx
+            cy = cy + sy
+    return 0
+
+
+def raster_fill_rect(r: "RasterRenderer", x: "i32", y: "i32", w: "i32", h: "i32", c: "Color") -> "i32":
+    x_end = x + w
+    y_end = y + h
+    for cy in range(y, y_end):
+        for cx in range(x, x_end):
+            raster_set_pixel(r, cx, cy, c)
+    return 0
+
+
+# PNG Format Builder with pHYs Resolution Chunk (Pure TokenVector)
+def _png_crc_table() -> "list[i64]":
+    tbl = []
+    for n in range(256):
+        c = n
+        for k in range(8):
+            if (c % 2) != 0:
+                c = 3988292384 ^ (c // 2)
+            else:
+                c = c // 2
+        tbl.append(c)
+    return tbl
+
+
+# ----------------------------- HtmlCanvasRenderer ----------------------------
+class HtmlCanvasRenderer:
+    width: "f64"
+    height: "f64"
+    title: "str"
+    scripts: "list[str]"
+
+
+def make_html_canvas_renderer(width: "f64", height: "f64", title: "str" = "TokenVector Visualization") -> "HtmlCanvasRenderer":
+    h = HtmlCanvasRenderer()
+    h.width = width
+    h.height = height
+    h.title = title
+    h.scripts = []
+    return h
+
+
+def html_add_scatter(h: "HtmlCanvasRenderer", name: "str", xs: "list[f64]", ys: "list[f64]", c: "Color", size: "f64" = 4.0) -> "i32":
+    n = len(xs)
+    script = "const s_" + name + " = { name: '" + name + "', color: '" + color_to_hex(c) + "', size: " + str(size) + ", pts: ["
+    for i in range(n):
+        if i > 0:
+            script = script + ","
+        script = script + "[" + str(xs[i]) + "," + str(ys[i]) + "]"
+    script = script + "] };"
+    h.scripts.append(script)
+    return 0
+
+
+def html_build(h: "HtmlCanvasRenderer", theme: "StyleTheme") -> "str":
+    w_str = str(int(h.width))
+    h_str = str(int(h.height))
+    out = "<!DOCTYPE html>\n<html>\n<head>\n"
+    out = out + "  <meta charset=\"utf-8\" />\n"
+    out = out + "  <title>" + h.title + "</title>\n"
+    out = out + "  <style>\n"
+    out = out + "    body { margin: 0; background: " + color_to_hex(theme.bg_color) + "; font-family: " + theme.font_family + "; display: flex; justify-content: center; align-items: center; min-height: 100vh; }\n"
+    out = out + "    #canvas-container { position: relative; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border-radius: 8px; overflow: hidden; }\n"
+    out = out + "    canvas { display: block; }\n"
+    out = out + "  </style>\n"
+    out = out + "</head>\n<body>\n"
+    out = out + "  <div id=\"canvas-container\">\n"
+    out = out + "    <canvas id=\"chartCanvas\" width=\"" + w_str + "\" height=\"" + h_str + "\"></canvas>\n"
+    out = out + "  </div>\n"
+    out = out + "  <script>\n"
+    out = out + "    const canvas = document.getElementById('chartCanvas');\n"
+    out = out + "    const ctx = canvas.getContext('2d');\n"
+    for i in range(len(h.scripts)):
+        out = out + "    " + h.scripts[i] + "\n"
+    out = out + "  </script>\n"
+    out = out + "</body>\n</html>\n"
+    return out

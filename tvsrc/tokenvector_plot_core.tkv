@@ -1,0 +1,578 @@
+# -*- coding: utf-8 -*-
+# =============================================================================
+# TokenVector.Plot - Native TokenVector Graphics & Visualization Engine
+# Core Module: Color, ColorMap, StyleTheme, CoordinateTransform, TicksEngine
+# =============================================================================
+
+# ----------------------------- Color (RGBA) ----------------------------------
+class Color:
+    r: "i32"
+    g: "i32"
+    b: "i32"
+    a: "i32"
+
+
+def make_color(r: "i32", g: "i32", b: "i32", a: "i32" = 255) -> "Color":
+    c = Color()
+    c.r = r
+    c.g = g
+    c.b = b
+    c.a = a
+    return c
+
+
+COLOR_TRANSPARENT = make_color(0, 0, 0, 0)
+COLOR_BLACK = make_color(0, 0, 0, 255)
+COLOR_WHITE = make_color(255, 255, 255, 255)
+COLOR_RED = make_color(235, 64, 52, 255)
+COLOR_GREEN = make_color(46, 204, 113, 255)
+COLOR_BLUE = make_color(52, 152, 219, 255)
+COLOR_GRAY = make_color(128, 128, 128, 255)
+COLOR_LIGHT_GRAY = make_color(220, 220, 220, 255)
+COLOR_DARK_GRAY = make_color(50, 50, 50, 255)
+
+
+def _hex_byte(hex_str: "str", start: "i32") -> "i32":
+    sub = hex_str[start:start + 2].lower()
+    val = 0
+    for i in range(2):
+        ch = sub[i]
+        cval = 0
+        if ch >= "0" and ch <= "9":
+            cval = int(ch)
+        elif ch == "a":
+            cval = 10
+        elif ch == "b":
+            cval = 11
+        elif ch == "c":
+            cval = 12
+        elif ch == "d":
+            cval = 13
+        elif ch == "e":
+            cval = 14
+        elif ch == "f":
+            cval = 15
+        val = val * 16 + cval
+    return val
+
+
+def color_from_hex(hex_str: "str") -> "Color":
+    clean = hex_str
+    if hex_str.startswith("#"):
+        clean = hex_str[1:]
+    ln = len(clean)
+    if ln == 6:
+        r = _hex_byte(clean, 0)
+        g = _hex_byte(clean, 2)
+        b = _hex_byte(clean, 4)
+        return make_color(r, g, b, 255)
+    if ln == 8:
+        r = _hex_byte(clean, 0)
+        g = _hex_byte(clean, 2)
+        b = _hex_byte(clean, 4)
+        a = _hex_byte(clean, 6)
+        return make_color(r, g, b, a)
+    return COLOR_BLACK
+
+
+def _byte_to_hex(b: "i32") -> "str":
+    v = b
+    if v < 0:
+        v = 0
+    if v > 255:
+        v = 255
+    hi = v // 16
+    lo = v % 16
+    digits = "0123456789ABCDEF"
+    return digits[hi] + digits[lo]
+
+
+def color_to_hex(c: "Color") -> "str":
+    return "#" + _byte_to_hex(c.r) + _byte_to_hex(c.g) + _byte_to_hex(c.b)
+
+
+def color_to_rgba_str(c: "Color") -> "str":
+    alpha = float(c.a) / 255.0
+    return "rgba(" + str(c.r) + "," + str(c.g) + "," + str(c.b) + "," + str(alpha) + ")"
+
+
+# ----------------------------- ColorMap ---------------------------------------
+class ColorMap:
+    name: "str"
+    stops: "list[Color]"
+
+
+def make_colormap(name: "str", stops: "list[Color]") -> "ColorMap":
+    cm = ColorMap()
+    cm.name = name
+    cm.stops = stops
+    return cm
+
+
+def _lerp_f(a: "f64", b: "f64", t: "f64") -> "f64":
+    return a + (b - a) * t
+
+
+def colormap_sample(cm: "ColorMap", t: "f64") -> "Color":
+    clamped_t = t
+    if clamped_t < 0.0:
+        clamped_t = 0.0
+    if clamped_t > 1.0:
+        clamped_t = 1.0
+    n = len(cm.stops)
+    if n == 0:
+        return COLOR_BLACK
+    if n == 1:
+        return cm.stops[0]
+    scaled = clamped_t * float(n - 1)
+    idx = int(scaled)
+    if idx >= n - 1:
+        return cm.stops[n - 1]
+    frac = scaled - float(idx)
+    c1 = cm.stops[idx]
+    c2 = cm.stops[idx + 1]
+    r = int(_lerp_f(float(c1.r), float(c2.r), frac))
+    g = int(_lerp_f(float(c1.g), float(c2.g), frac))
+    b = int(_lerp_f(float(c1.b), float(c2.b), frac))
+    a = int(_lerp_f(float(c1.a), float(c2.a), frac))
+    return make_color(r, g, b, a)
+
+
+def get_viridis_colormap() -> "ColorMap":
+    stops = [
+        color_from_hex("#440154"),
+        color_from_hex("#482878"),
+        color_from_hex("#3E4A89"),
+        color_from_hex("#31688E"),
+        color_from_hex("#26828E"),
+        color_from_hex("#1F9E89"),
+        color_from_hex("#35B779"),
+        color_from_hex("#6DCD59"),
+        color_from_hex("#B4DE2C"),
+        color_from_hex("#FDE725"),
+    ]
+    return make_colormap("Viridis", stops)
+
+
+def get_plasma_colormap() -> "ColorMap":
+    stops = [
+        color_from_hex("#0D0887"),
+        color_from_hex("#46039F"),
+        color_from_hex("#7201A8"),
+        color_from_hex("#9C179E"),
+        color_from_hex("#BD3786"),
+        color_from_hex("#D8576B"),
+        color_from_hex("#ED7953"),
+        color_from_hex("#FA9E3B"),
+        color_from_hex("#FDC926"),
+        color_from_hex("#F0F921"),
+    ]
+    return make_colormap("Plasma", stops)
+
+
+def get_inferno_colormap() -> "ColorMap":
+    stops = [
+        color_from_hex("#000004"),
+        color_from_hex("#1B0C41"),
+        color_from_hex("#4A0C6B"),
+        color_from_hex("#781C6D"),
+        color_from_hex("#A52C60"),
+        color_from_hex("#CF4446"),
+        color_from_hex("#ED6925"),
+        color_from_hex("#FB9B06"),
+        color_from_hex("#F7D13D"),
+        color_from_hex("#FCFFA4"),
+    ]
+    return make_colormap("Inferno", stops)
+
+
+def get_coolwarm_colormap() -> "ColorMap":
+    stops = [
+        color_from_hex("#3B4CC0"),
+        color_from_hex("#6788EE"),
+        color_from_hex("#9ABBFF"),
+        color_from_hex("#C9D7F0"),
+        color_from_hex("#EDD1C2"),
+        color_from_hex("#F7A889"),
+        color_from_hex("#E36952"),
+        color_from_hex("#B40426"),
+    ]
+    return make_colormap("CoolWarm", stops)
+
+
+# ----------------------------- StyleTheme -------------------------------------
+class StyleTheme:
+    name: "str"
+    bg_color: "Color"
+    plot_area_color: "Color"
+    axis_color: "Color"
+    grid_color: "Color"
+    text_color: "Color"
+    title_color: "Color"
+    legend_bg: "Color"
+    legend_border: "Color"
+    axis_line_width: "f64"
+    grid_line_width: "f64"
+    show_major_grid: "i32"
+    show_minor_grid: "i32"
+    title_font_size: "f64"
+    axis_label_font_size: "f64"
+    tick_label_font_size: "f64"
+    legend_font_size: "f64"
+    font_family: "str"
+    palette: "list[Color]"
+
+
+def make_theme_science() -> "StyleTheme":
+    t = StyleTheme()
+    t.name = "Science"
+    t.bg_color = COLOR_WHITE
+    t.plot_area_color = COLOR_WHITE
+    t.axis_color = color_from_hex("#111111")
+    t.grid_color = color_from_hex("#E5E5E5")
+    t.text_color = color_from_hex("#111111")
+    t.title_color = color_from_hex("#000000")
+    t.legend_bg = make_color(255, 255, 255, 230)
+    t.legend_border = color_from_hex("#BDC3C7")
+    t.axis_line_width = 1.2
+    t.grid_line_width = 0.75
+    t.show_major_grid = 1
+    t.show_minor_grid = 0
+    t.title_font_size = 16.0
+    t.axis_label_font_size = 12.0
+    t.tick_label_font_size = 10.0
+    t.legend_font_size = 10.0
+    t.font_family = "Helvetica, Arial, sans-serif"
+    t.palette = [
+        color_from_hex("#0C5DA5"),
+        color_from_hex("#00B945"),
+        color_from_hex("#FF9500"),
+        color_from_hex("#FF2C00"),
+        color_from_hex("#845B97"),
+        color_from_hex("#474747"),
+        color_from_hex("#9E9E9E"),
+    ]
+    return t
+
+
+def make_theme_nature() -> "StyleTheme":
+    t = StyleTheme()
+    t.name = "Nature"
+    t.bg_color = COLOR_WHITE
+    t.plot_area_color = COLOR_WHITE
+    t.axis_color = color_from_hex("#222222")
+    t.grid_color = color_from_hex("#ECECEC")
+    t.text_color = color_from_hex("#222222")
+    t.title_color = color_from_hex("#111111")
+    t.legend_bg = make_color(255, 255, 255, 240)
+    t.legend_border = color_from_hex("#D0D0D0")
+    t.axis_line_width = 1.0
+    t.grid_line_width = 0.5
+    t.show_major_grid = 1
+    t.show_minor_grid = 0
+    t.title_font_size = 15.0
+    t.axis_label_font_size = 11.5
+    t.tick_label_font_size = 9.5
+    t.legend_font_size = 9.5
+    t.font_family = "Arial, Helvetica, sans-serif"
+    t.palette = [
+        color_from_hex("#E64B35"),
+        color_from_hex("#4DBBD5"),
+        color_from_hex("#00A087"),
+        color_from_hex("#3C5488"),
+        color_from_hex("#F39B7F"),
+        color_from_hex("#8491B4"),
+        color_from_hex("#91D1C2"),
+        color_from_hex("#DC0000"),
+        color_from_hex("#7E6148"),
+    ]
+    return t
+
+
+def make_theme_ieee() -> "StyleTheme":
+    t = StyleTheme()
+    t.name = "IEEE"
+    t.bg_color = COLOR_WHITE
+    t.plot_area_color = COLOR_WHITE
+    t.axis_color = color_from_hex("#000000")
+    t.grid_color = color_from_hex("#D9D9D9")
+    t.text_color = color_from_hex("#000000")
+    t.title_color = color_from_hex("#000000")
+    t.legend_bg = COLOR_WHITE
+    t.legend_border = color_from_hex("#000000")
+    t.axis_line_width = 1.0
+    t.grid_line_width = 0.5
+    t.show_major_grid = 1
+    t.show_minor_grid = 0
+    t.title_font_size = 14.0
+    t.axis_label_font_size = 10.0
+    t.tick_label_font_size = 9.0
+    t.legend_font_size = 8.5
+    t.font_family = "Times New Roman, serif"
+    t.palette = [
+        color_from_hex("#000000"),
+        color_from_hex("#E41A1C"),
+        color_from_hex("#377EB8"),
+        color_from_hex("#4DAF4A"),
+        color_from_hex("#984EA3"),
+        color_from_hex("#FF7F00"),
+        color_from_hex("#A65628"),
+    ]
+    return t
+
+
+def make_theme_dark() -> "StyleTheme":
+    t = StyleTheme()
+    t.name = "Dark"
+    t.bg_color = color_from_hex("#1E1E2E")
+    t.plot_area_color = color_from_hex("#181825")
+    t.axis_color = color_from_hex("#CDD6F4")
+    t.grid_color = color_from_hex("#313244")
+    t.text_color = color_from_hex("#CDD6F4")
+    t.title_color = color_from_hex("#BAC2DE")
+    t.legend_bg = color_from_hex("#181825")
+    t.legend_border = color_from_hex("#45475A")
+    t.axis_line_width = 1.2
+    t.grid_line_width = 0.8
+    t.show_major_grid = 1
+    t.show_minor_grid = 0
+    t.title_font_size = 16.0
+    t.axis_label_font_size = 12.0
+    t.tick_label_font_size = 10.0
+    t.legend_font_size = 10.0
+    t.font_family = "Segoe UI, sans-serif"
+    t.palette = [
+        color_from_hex("#89B4FA"),
+        color_from_hex("#A6E3A1"),
+        color_from_hex("#F9E2AF"),
+        color_from_hex("#F38BA8"),
+        color_from_hex("#CBA6F7"),
+        color_from_hex("#FAB387"),
+        color_from_hex("#94E2D5"),
+    ]
+    return t
+
+
+# ----------------------------- CoordinateTransform ---------------------------
+# Scale Types: 0 = Linear, 1 = Log10, 2 = Ln, 3 = SymLog
+SCALE_LINEAR = 0
+SCALE_LOG10 = 1
+SCALE_LN = 2
+SCALE_SYMLOG = 3
+
+
+class CoordinateTransform:
+    scale: "i32"
+    data_min: "f64"
+    data_max: "f64"
+    target_min: "f64"
+    target_max: "f64"
+    lin_thresh: "f64"
+    lin_scale: "f64"
+    trans_min: "f64"
+    trans_max: "f64"
+    trans_range: "f64"
+    target_range: "f64"
+
+
+def _forward_scalar(scale: "i32", v: "f64", lin_thresh: "f64", lin_scale: "f64") -> "f64":
+    if scale == SCALE_LOG10:
+        if v > 0.0:
+            return log10(v)
+        return -1000000.0
+    if scale == SCALE_LN:
+        if v > 0.0:
+            return log(v)
+        return -1000000.0
+    if scale == SCALE_SYMLOG:
+        abs_v = v
+        if abs_v < 0.0:
+            abs_v = -abs_v
+        if abs_v <= lin_thresh:
+            return (v / lin_thresh) * lin_scale
+        sgn = 1.0
+        if v < 0.0:
+            sgn = -1.0
+        return sgn * (lin_scale + log10(abs_v / lin_thresh))
+    return v
+
+
+def _inverse_scalar(scale: "i32", t: "f64", lin_thresh: "f64", lin_scale: "f64") -> "f64":
+    if scale == SCALE_LOG10:
+        return pow(10.0, t)
+    if scale == SCALE_LN:
+        return exp(t)
+    if scale == SCALE_SYMLOG:
+        abs_t = t
+        if abs_t < 0.0:
+            abs_t = -abs_t
+        if abs_t <= lin_scale:
+            return (t * lin_thresh) / lin_scale
+        sgn = 1.0
+        if t < 0.0:
+            sgn = -1.0
+        return sgn * lin_thresh * pow(10.0, abs_t - lin_scale)
+    return t
+
+
+def make_coord_transform(
+    scale: "i32",
+    data_min: "f64",
+    data_max: "f64",
+    target_min: "f64",
+    target_max: "f64",
+    lin_thresh: "f64" = 1.0,
+    lin_scale: "f64" = 1.0
+) -> "CoordinateTransform":
+    ct = CoordinateTransform()
+    ct.scale = scale
+    ct.data_min = data_min
+    ct.data_max = data_max
+    ct.target_min = target_min
+    ct.target_max = target_max
+    ct.lin_thresh = lin_thresh
+    ct.lin_scale = lin_scale
+
+    t_min = _forward_scalar(scale, data_min, lin_thresh, lin_scale)
+    t_max = _forward_scalar(scale, data_max, lin_thresh, lin_scale)
+    ct.trans_min = t_min
+    ct.trans_max = t_max
+    rg = t_max - t_min
+    if rg < 0.0:
+        rg = -rg
+    if rg < 0.000000000001:
+        rg = 1.0
+    ct.trans_range = rg
+    ct.target_range = target_max - target_min
+    return ct
+
+
+def transform_to_target(ct: "CoordinateTransform", data_val: "f64") -> "f64":
+    t = _forward_scalar(ct.scale, data_val, ct.lin_thresh, ct.lin_scale)
+    norm = (t - ct.trans_min) / ct.trans_range
+    return ct.target_min + norm * ct.target_range
+
+
+def transform_to_data(ct: "CoordinateTransform", target_val: "f64") -> "f64":
+    norm = (target_val - ct.target_min) / ct.target_range
+    t = ct.trans_min + norm * ct.trans_range
+    return _inverse_scalar(ct.scale, t, ct.lin_thresh, ct.lin_scale)
+
+
+def transform_span(ct: "CoordinateTransform", inputs: "list[f64]") -> "list[f64]":
+    out = []
+    n = len(inputs)
+    t_min = ct.trans_min
+    t_range = ct.trans_range
+    tgt_min = ct.target_min
+    tgt_range = ct.target_range
+    for i in range(n):
+        val = inputs[i]
+        norm = (val - t_min) / t_range
+        out.append(tgt_min + norm * tgt_range)
+    return out
+
+
+# ----------------------------- TicksEngine ------------------------------------
+class Tick:
+    position: "f64"
+    label: "str"
+    is_major: "i32"
+
+
+def make_tick(pos: "f64", label: "str", is_major: "i32" = 1) -> "Tick":
+    tk = Tick()
+    tk.position = pos
+    tk.label = label
+    tk.is_major = is_major
+    return tk
+
+
+def _format_tick_number(v: "f64") -> "str":
+    abs_v = v
+    if abs_v < 0.0:
+        abs_v = -abs_v
+    if abs_v < 0.00000000001:
+        return "0"
+    iv = int(v)
+    if float(iv) == v:
+        return str(iv)
+    # Format float up to 3 decimals
+    s = str(v)
+    dot_idx = s.find(".")
+    if dot_idx >= 0 and len(s) > dot_idx + 4:
+        return s[:dot_idx + 4]
+    return s
+
+
+def ticks_generate_linear(min_val: "f64", max_val: "f64", target_count: "i32" = 6) -> "list[Tick]":
+    ticks = []
+    diff = max_val - min_val
+    if diff < 0.0:
+        diff = -diff
+    if diff < 0.000000000001:
+        ticks.append(make_tick(min_val, _format_tick_number(min_val), 1))
+        return ticks
+
+    lo = min_val
+    hi = max_val
+    if lo > hi:
+        tmp = lo
+        lo = hi
+        hi = tmp
+
+    raw_step = (hi - lo) / float(target_count - 1)
+    # Calculate step magnitude in powers of 10
+    exp_f = floor(log10(raw_step))
+    p10 = pow(10.0, exp_f)
+    base_step = raw_step / p10
+
+    chosen_base = 1.0
+    if base_step > 7.0:
+        chosen_base = 10.0
+    elif base_step > 3.5:
+        chosen_base = 5.0
+    elif base_step > 1.5:
+        chosen_base = 2.0
+    else:
+        chosen_base = 1.0
+
+    step = chosen_base * p10
+    start = floor(lo / step) * step
+    end = ceil(hi / step) * step
+
+    cur = start
+    safety = 0
+    while cur <= end + step * 0.01 and safety < 100:
+        if cur >= lo - step * 0.01 and cur <= hi + step * 0.01:
+            ticks.append(make_tick(cur, _format_tick_number(cur), 1))
+        cur = cur + step
+        safety = safety + 1
+
+    return ticks
+
+
+def ticks_generate_log(min_val: "f64", max_val: "f64") -> "list[Tick]":
+    ticks = []
+    if min_val <= 0.0 or max_val <= 0.0:
+        return ticks
+
+    lo = min_val
+    hi = max_val
+    if lo > hi:
+        tmp = lo
+        lo = hi
+        hi = tmp
+
+    log_min = floor(log10(lo))
+    log_max = ceil(log10(hi))
+
+    cur_exp = log_min
+    while cur_exp <= log_max:
+        pos = pow(10.0, cur_exp)
+        if pos >= lo and pos <= hi:
+            label = "10^" + str(int(cur_exp))
+            ticks.append(make_tick(pos, label, 1))
+        cur_exp = cur_exp + 1.0
+
+    return ticks

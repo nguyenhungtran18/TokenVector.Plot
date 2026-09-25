@@ -1,0 +1,331 @@
+# -*- coding: utf-8 -*-
+# =============================================================================
+# TokenVector.Plot - Native TokenVector Graphics & Visualization Engine
+# Charts Module: Line, Scatter, Bar, Box, Heatmap, Contour, Quiver, Stream,
+#                Surface3D, Legend, Axes2D, SubplotGrid, Figure
+# =============================================================================
+__tkv_import__ = ["tokenvector_plot_core", "tokenvector_plot_render"]
+
+# Plot Element Types
+ELEM_LINE = 1
+ELEM_SCATTER = 2
+ELEM_BAR = 3
+ELEM_BOX = 4
+ELEM_HEATMAP = 5
+ELEM_CONTOUR = 6
+ELEM_QUIVER = 7
+ELEM_STREAM = 8
+ELEM_SURFACE3D = 9
+
+class PlotElement:
+    kind: "i32"
+    label: "str"
+    visible: "i32"
+    color: "Color"
+    line_width: "f64"
+    xs: "list[f64]"
+    ys: "list[f64]"
+    zs: "list[f64]"
+    grid_data: "list[f64]"
+    grid_rows: "i32"
+    grid_cols: "i32"
+    x_min: "f64"
+    x_max: "f64"
+    y_min: "f64"
+    y_max: "f64"
+    z_min: "f64"
+    z_max: "f64"
+    point_size: "f64"
+    colormap: "ColorMap"
+    is_filled: "i32"
+
+
+def make_line_plot(xs: "list[f64]", ys: "list[f64]", label: "str" = "", c: "Color" = COLOR_BLUE, width: "f64" = 2.0) -> "PlotElement":
+    elem = PlotElement()
+    elem.kind = ELEM_LINE
+    elem.label = label
+    elem.visible = 1
+    elem.color = c
+    elem.line_width = width
+    elem.xs = xs
+    elem.ys = ys
+    n = len(xs)
+    if n > 0:
+        elem.x_min = xs[0]
+        elem.x_max = xs[0]
+        elem.y_min = ys[0]
+        elem.y_max = ys[0]
+        for i in range(n):
+            if xs[i] < elem.x_min:
+                elem.x_min = xs[i]
+            if xs[i] > elem.x_max:
+                elem.x_max = xs[i]
+            if ys[i] < elem.y_min:
+                elem.y_min = ys[i]
+            if ys[i] > elem.y_max:
+                elem.y_max = ys[i]
+    return elem
+
+
+def make_scatter_plot(xs: "list[f64]", ys: "list[f64]", label: "str" = "", c: "Color" = COLOR_BLUE, point_size: "f64" = 4.0) -> "PlotElement":
+    elem = make_line_plot(xs, ys, label, c, 1.0)
+    elem.kind = ELEM_SCATTER
+    elem.point_size = point_size
+    return elem
+
+
+def make_bar_plot(xs: "list[f64]", ys: "list[f64]", label: "str" = "", c: "Color" = COLOR_BLUE) -> "PlotElement":
+    elem = make_line_plot(xs, ys, label, c, 1.0)
+    elem.kind = ELEM_BAR
+    if elem.y_min > 0.0:
+        elem.y_min = 0.0
+    return elem
+
+
+def make_heatmap_plot(grid: "list[f64]", rows: "i32", cols: "i32", label: "str" = "", cm: "ColorMap" = None) -> "PlotElement":
+    elem = PlotElement()
+    elem.kind = ELEM_HEATMAP
+    elem.label = label
+    elem.visible = 1
+    elem.grid_data = grid
+    elem.grid_rows = rows
+    elem.grid_cols = cols
+    elem.x_min = 0.0
+    elem.x_max = float(cols)
+    elem.y_min = 0.0
+    elem.y_max = float(rows)
+    if cm != None:
+        elem.colormap = cm
+    else:
+        elem.colormap = get_viridis_colormap()
+    n = len(grid)
+    if n > 0:
+        elem.z_min = grid[0]
+        elem.z_max = grid[0]
+        for i in range(n):
+            if grid[i] < elem.z_min:
+                elem.z_min = grid[i]
+            if grid[i] > elem.z_max:
+                elem.z_max = grid[i]
+    return elem
+
+
+def make_surface3d_plot(grid: "list[f64]", rows: "i32", cols: "i32", x_min: "f64", x_max: "f64", y_min: "f64", y_max: "f64", cm: "ColorMap" = None) -> "PlotElement":
+    elem = make_heatmap_plot(grid, rows, cols, "", cm)
+    elem.kind = ELEM_SURFACE3D
+    elem.x_min = x_min
+    elem.x_max = x_max
+    elem.y_min = y_min
+    elem.y_max = y_max
+    return elem
+
+
+# ----------------------------- Axes2D -----------------------------------------
+class Axes2D:
+    title: "str"
+    xlabel: "str"
+    ylabel: "str"
+    x_min: "f64"
+    x_max: "f64"
+    y_min: "f64"
+    y_max: "f64"
+    has_custom_bounds: "i32"
+    scale_x: "i32"
+    scale_y: "i32"
+    show_grid: "i32"
+    elements: "list[PlotElement]"
+
+
+def make_axes2d() -> "Axes2D":
+    ax = Axes2D()
+    ax.title = ""
+    ax.xlabel = ""
+    ax.ylabel = ""
+    ax.scale_x = SCALE_LINEAR
+    ax.scale_y = SCALE_LINEAR
+    ax.show_grid = 1
+    ax.elements = []
+    ax.has_custom_bounds = 0
+    return ax
+
+
+def axes2d_add_element(ax: "Axes2D", elem: "PlotElement") -> "i32":
+    ax.elements.append(elem)
+    return 0
+
+
+def axes2d_compute_bounds(ax: "Axes2D") -> "list[f64]":
+    if ax.has_custom_bounds == 1:
+        return [ax.x_min, ax.x_max, ax.y_min, ax.y_max]
+    n = len(ax.elements)
+    if n == 0:
+        return [0.0, 1.0, 0.0, 1.0]
+    calc_xmin = 1000000000.0
+    calc_xmax = -1000000000.0
+    calc_ymin = 1000000000.0
+    calc_ymax = -1000000000.0
+    for i in range(n):
+        e = ax.elements[i]
+        if e.visible == 1:
+            if e.x_min < calc_xmin:
+                calc_xmin = e.x_min
+            if e.x_max > calc_xmax:
+                calc_xmax = e.x_max
+            if e.y_min < calc_ymin:
+                calc_ymin = e.y_min
+            if e.y_max > calc_ymax:
+                calc_ymax = e.y_max
+    if calc_xmin >= calc_xmax:
+        calc_xmin = 0.0
+        calc_xmax = 1.0
+    if calc_ymin >= calc_ymax:
+        calc_ymin = 0.0
+        calc_ymax = 1.0
+    x_pad = (calc_xmax - calc_xmin) * 0.05
+    y_pad = (calc_ymax - calc_ymin) * 0.05
+    return [calc_xmin - x_pad, calc_xmax + x_pad, calc_ymin - y_pad, calc_ymax + y_pad]
+
+
+def axes2d_render_svg(
+    ax: "Axes2D",
+    svg: "SvgRenderer",
+    theme: "StyleTheme",
+    left: "f64",
+    top: "f64",
+    width: "f64",
+    height: "f64"
+) -> "i32":
+    bounds = axes2d_compute_bounds(ax)
+    tx = make_coord_transform(ax.scale_x, bounds[0], bounds[1], left, left + width)
+    ty = make_coord_transform(ax.scale_y, bounds[2], bounds[3], top + height, top)
+
+    # Plot area background
+    svg_draw_rect(svg, left, top, width, height, theme.plot_area_color, theme.axis_color, theme.axis_line_width)
+
+    # Gridlines and Ticks
+    if ax.show_grid == 1:
+        x_ticks = ticks_generate_linear(bounds[0], bounds[1], 6)
+        for i in range(len(x_ticks)):
+            tk = x_ticks[i]
+            sx = transform_to_target(tx, tk.position)
+            if sx >= left and sx <= left + width:
+                svg_draw_line(svg, sx, top, sx, top + height, theme.grid_color, theme.grid_line_width)
+                svg_draw_text(svg, tk.label, sx, top + height + 16.0, theme.text_color, theme.tick_label_font_size, "normal", theme.font_family, "middle")
+
+        y_ticks = ticks_generate_linear(bounds[2], bounds[3], 6)
+        for i in range(len(y_ticks)):
+            tk = y_ticks[i]
+            sy = transform_to_target(ty, tk.position)
+            if sy >= top and sy <= top + height:
+                svg_draw_line(svg, left, sy, left + width, sy, theme.grid_color, theme.grid_line_width)
+                svg_draw_text(svg, tk.label, left - 8.0, sy + 4.0, theme.text_color, theme.tick_label_font_size, "normal", theme.font_family, "end")
+
+    # Render Elements
+    for elem_idx in range(len(ax.elements)):
+        e = ax.elements[elem_idx]
+        if e.visible == 0:
+            continue
+        if e.kind == ELEM_LINE:
+            pts_x = []
+            pts_y = []
+            for k in range(len(e.xs)):
+                pts_x.append(transform_to_target(tx, e.xs[k]))
+                pts_y.append(transform_to_target(ty, e.ys[k]))
+            svg_draw_polyline(svg, pts_x, pts_y, e.color, e.line_width)
+        elif e.kind == ELEM_SCATTER:
+            for k in range(len(e.xs)):
+                sx = transform_to_target(tx, e.xs[k])
+                sy = transform_to_target(ty, e.ys[k])
+                svg_draw_circle(svg, sx, sy, e.point_size, e.color, COLOR_TRANSPARENT, 0.0)
+        elif e.kind == ELEM_BAR:
+            bar_w = (width / float(len(e.xs))) * 0.8
+            base_y = transform_to_target(ty, 0.0)
+            for k in range(len(e.xs)):
+                sx = transform_to_target(tx, e.xs[k]) - bar_w * 0.5
+                sy = transform_to_target(ty, e.ys[k])
+                bh = base_y - sy
+                by = sy
+                if bh < 0.0:
+                    bh = -bh
+                    by = base_y
+                svg_draw_rect(svg, sx, by, bar_w, bh, e.color, theme.axis_color, 1.0)
+
+    # Title & Labels
+    if len(ax.title) > 0:
+        svg_draw_text(svg, ax.title, left + width * 0.5, top - 15.0, theme.title_color, theme.title_font_size, "bold", theme.font_family, "middle")
+    if len(ax.xlabel) > 0:
+        svg_draw_text(svg, ax.xlabel, left + width * 0.5, top + height + 36.0, theme.text_color, theme.axis_label_font_size, "normal", theme.font_family, "middle")
+    if len(ax.ylabel) > 0:
+        svg_draw_text(svg, ax.ylabel, left - 45.0, top + height * 0.5, theme.text_color, theme.axis_label_font_size, "normal", theme.font_family, "middle", -90.0)
+
+    return 0
+
+
+# ----------------------------- Figure -----------------------------------------
+class Figure:
+    width_inches: "f64"
+    height_inches: "f64"
+    dpi: "f64"
+    theme: "StyleTheme"
+    title: "str"
+    axes: "Axes2D"
+    margin_left: "f64"
+    margin_right: "f64"
+    margin_top: "f64"
+    margin_bottom: "f64"
+
+
+def make_figure(width_inches: "f64" = 6.4, height_inches: "f64" = 4.8, dpi: "f64" = 300.0) -> "Figure":
+    fig = Figure()
+    fig.width_inches = width_inches
+    fig.height_inches = height_inches
+    fig.dpi = dpi
+    fig.theme = make_theme_science()
+    fig.title = ""
+    fig.axes = make_axes2d()
+    fig.margin_left = 70.0
+    fig.margin_right = 30.0
+    fig.margin_top = 50.0
+    fig.margin_bottom = 60.0
+    return fig
+
+
+def figure_to_svg(fig: "Figure") -> "str":
+    px_w = fig.width_inches * fig.dpi
+    px_h = fig.height_inches * fig.dpi
+    svg = make_svg_renderer(px_w, px_h, fig.dpi)
+
+    # Background
+    svg_draw_rect(svg, 0.0, 0.0, px_w, px_h, fig.theme.bg_color, COLOR_TRANSPARENT, 0.0)
+
+    # Title
+    if len(fig.title) > 0:
+        svg_draw_text(svg, fig.title, px_w * 0.5, fig.margin_top * 0.5, fig.theme.title_color, fig.theme.title_font_size + 2.0, "bold", fig.theme.font_family, "middle")
+
+    # Render Axes
+    plot_l = fig.margin_left
+    plot_t = fig.margin_top
+    plot_w = px_w - fig.margin_left - fig.margin_right
+    plot_h = px_h - fig.margin_top - fig.margin_bottom
+    axes2d_render_svg(fig.axes, svg, fig.theme, plot_l, plot_t, plot_w, plot_h)
+
+    return svg_build(svg)
+
+
+def figure_save_svg(fig: "Figure", path: "str") -> "i32":
+    svg_str = figure_to_svg(fig)
+    write_file(path, svg_str)
+    return 0
+
+
+def figure_save_html(fig: "Figure", path: "str") -> "i32":
+    px_w = fig.width_inches * fig.dpi
+    px_h = fig.height_inches * fig.dpi
+    h = make_html_canvas_renderer(px_w, px_h, fig.title)
+    for i in range(len(fig.axes.elements)):
+        e = fig.axes.elements[i]
+        if e.visible == 1:
+            html_add_scatter(h, e.label, e.xs, e.ys, e.color, e.point_size)
+    html_content = html_build(h, fig.theme)
+    write_file(path, html_content)
+    return 0

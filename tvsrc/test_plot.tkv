@@ -1,0 +1,94 @@
+# -*- coding: utf-8 -*-
+# Test suite for TokenVector.Plot
+__tkv_import__ = ["tokenvector_plot_all"]
+
+def test_color() -> "i32":
+    c = make_color(10, 20, 30, 255)
+    if c.r != 10 or c.g != 20 or c.b != 30 or c.a != 255:
+        return 1
+    h = color_to_hex(c)
+    if h != "#0A141E":
+        return 2
+    c2 = color_from_hex("#0A141E")
+    if c2.r != 10 or c2.g != 20 or c2.b != 30:
+        return 3
+    return 0
+
+
+def test_colormap() -> "i32":
+    cm = get_viridis_colormap()
+    if cm.name != "Viridis":
+        return 1
+    c0 = colormap_sample(cm, 0.0)
+    if c0.r == 0 and c0.g == 0 and c0.b == 0:
+        return 2
+    c1 = colormap_sample(cm, 1.0)
+    if c1.r == 0 and c1.g == 0 and c1.b == 0:
+        return 3
+    return 0
+
+
+def test_coord_transform() -> "i32":
+    ct = make_coord_transform(0, 0.0, 100.0, 0.0, 1000.0)
+    t50 = transform_to_target(ct, 50.0)
+    if t50 < 499.0 or t50 > 501.0:
+        return 1
+    d50 = transform_to_data(ct, 500.0)
+    if d50 < 49.0 or d50 > 51.0:
+        return 2
+    return 0
+
+
+def test_ticks() -> "i32":
+    ticks = ticks_generate_linear(0.0, 100.0, 5)
+    if len(ticks) != 5:
+        return 1
+    t0 = ticks[0]
+    if t0.position < -0.01 or t0.position > 0.01:
+        return 2
+    t4 = ticks[4]
+    if t4.position < 99.9 or t4.position > 100.1:
+        return 3
+    return 0
+
+
+def test_figure_svg() -> "i32":
+    fig = make_figure(4.0, 3.0, 100.0)
+    xs = [0.0, 1.0, 2.0, 3.0, 4.0]
+    ys = [0.0, 1.0, 4.0, 9.0, 16.0]
+    line = make_line_plot(xs, ys, "quad", color_blue(), 2.0)
+    ax = fig.axes
+    axes2d_add_element(ax, line)
+    scatter = make_scatter_plot(xs, ys, "pts", color_red(), 5.0)
+    axes2d_add_element(ax, scatter)
+
+    svg = figure_to_svg(fig)
+    if len(svg) < 100:
+        return 1
+    if not svg.startswith("<?xml"):
+        return 2
+    return 0
+
+
+def run_all_tests() -> "str":
+    rc1 = test_color()
+    if rc1 != 0:
+        return "FAIL_COLOR_" + str(rc1)
+
+    rc2 = test_colormap()
+    if rc2 != 0:
+        return "FAIL_COLORMAP_" + str(rc2)
+
+    rc3 = test_coord_transform()
+    if rc3 != 0:
+        return "FAIL_COORD_" + str(rc3)
+
+    rc4 = test_ticks()
+    if rc4 != 0:
+        return "FAIL_TICKS_" + str(rc4)
+
+    rc5 = test_figure_svg()
+    if rc5 != 0:
+        return "FAIL_SVG_" + str(rc5)
+
+    return "ALL_TESTS_PASS (5/5 suites green)"

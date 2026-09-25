@@ -1,0 +1,92 @@
+# -*- coding: utf-8 -*-
+# =============================================================================
+# TokenVector.Plot - Native TokenVector Graphics & Visualization Engine
+# Interop Module: Zero-Copy Bridge for TokenVector.Data (DataFrame/Series)
+#                 and TokenVector.Numerics (NDArray)
+# =============================================================================
+__tkv_import__ = ["tokenvector_plot_core", "tokenvector_plot_charts"]
+
+# Bridge with DataFrame (from TokenVector.Data)
+# In TokenVector, DataFrame cols are Series: df.col_by_name(col_name) -> Series.f64s
+def plot_df_line(
+    df_col_x: "list[f64]",
+    df_col_y: "list[f64]",
+    x_label: "str",
+    y_label: "str",
+    title: "str" = "",
+    color: "Color" = COLOR_BLUE
+) -> "Figure":
+    fig = make_figure(6.4, 4.8, 300.0)
+    fig.title = title
+    fig.axes.xlabel = x_label
+    fig.axes.ylabel = y_label
+    line = make_line_plot(df_col_x, df_col_y, y_label, color, 2.0)
+    axes2d_add_element(fig.axes, line)
+    return fig
+
+
+def plot_df_scatter(
+    df_col_x: "list[f64]",
+    df_col_y: "list[f64]",
+    x_label: "str",
+    y_label: "str",
+    title: "str" = "",
+    color: "Color" = COLOR_BLUE,
+    point_size: "f64" = 4.0
+) -> "Figure":
+    fig = make_figure(6.4, 4.8, 300.0)
+    fig.title = title
+    fig.axes.xlabel = x_label
+    fig.axes.ylabel = y_label
+    scatter = make_scatter_plot(df_col_x, df_col_y, y_label, color, point_size)
+    axes2d_add_element(fig.axes, scatter)
+    return fig
+
+
+def plot_df_bar(
+    df_col_x: "list[f64]",
+    df_col_y: "list[f64]",
+    x_label: "str",
+    y_label: "str",
+    title: "str" = "",
+    color: "Color" = COLOR_BLUE
+) -> "Figure":
+    fig = make_figure(6.4, 4.8, 300.0)
+    fig.title = title
+    fig.axes.xlabel = x_label
+    fig.axes.ylabel = y_label
+    bar = make_bar_plot(df_col_x, df_col_y, y_label, color)
+    axes2d_add_element(fig.axes, bar)
+    return fig
+
+
+# Bridge with NDArray (from TokenVector.Numerics)
+def plot_ndarray_line(
+    arr_f64s: "list[f64]",
+    label: "str" = "Signal",
+    title: "str" = "",
+    color: "Color" = COLOR_BLUE
+) -> "Figure":
+    fig = make_figure(6.4, 4.8, 300.0)
+    fig.title = title
+    n = len(arr_f64s)
+    xs = []
+    for i in range(n):
+        xs.append(float(i))
+    line = make_line_plot(xs, arr_f64s, label, color, 2.0)
+    axes2d_add_element(fig.axes, line)
+    return fig
+
+
+def plot_ndarray_heatmap(
+    grid_f64s: "list[f64]",
+    rows: "i32",
+    cols: "i32",
+    title: "str" = "",
+    cm: "ColorMap" = None
+) -> "Figure":
+    fig = make_figure(6.4, 4.8, 300.0)
+    fig.title = title
+    hm = make_heatmap_plot(grid_f64s, rows, cols, "Matrix", cm)
+    axes2d_add_element(fig.axes, hm)
+    return fig
