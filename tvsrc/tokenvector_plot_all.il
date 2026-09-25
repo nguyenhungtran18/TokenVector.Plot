@@ -238,12 +238,15 @@
   .field public float64 'line_width'
   .field public class [mscorlib]System.Collections.Generic.List`1<float64> 'xs'
   .field public class [mscorlib]System.Collections.Generic.List`1<float64> 'ys'
+  .field public class [mscorlib]System.Collections.Generic.List`1<float64> 'grid_data'
+  .field public int32 'grid_rows'
+  .field public int32 'grid_cols'
   .field public float64 'x_min'
   .field public float64 'x_max'
   .field public float64 'y_min'
   .field public float64 'y_max'
   .field public float64 'point_size'
-  .method public hidebysig specialname rtspecialname instance void .ctor(int32 'kind', string 'label', int32 'visible', class Color 'color', float64 'line_width', float64 'x_min', float64 'x_max', float64 'y_min', float64 'y_max', float64 'point_size') cil managed
+  .method public hidebysig specialname rtspecialname instance void .ctor(int32 'kind', string 'label', int32 'visible', class Color 'color', float64 'line_width', int32 'grid_rows', int32 'grid_cols', float64 'x_min', float64 'x_max', float64 'y_min', float64 'y_max', float64 'point_size') cil managed
   {
     .maxstack 8
     ldarg.0
@@ -265,18 +268,24 @@
     stfld float64 PlotElement::'line_width'
     ldarg.0
     ldarg.s 6
-    stfld float64 PlotElement::'x_min'
+    stfld int32 PlotElement::'grid_rows'
     ldarg.0
     ldarg.s 7
-    stfld float64 PlotElement::'x_max'
+    stfld int32 PlotElement::'grid_cols'
     ldarg.0
     ldarg.s 8
-    stfld float64 PlotElement::'y_min'
+    stfld float64 PlotElement::'x_min'
     ldarg.0
     ldarg.s 9
-    stfld float64 PlotElement::'y_max'
+    stfld float64 PlotElement::'x_max'
     ldarg.0
     ldarg.s 10
+    stfld float64 PlotElement::'y_min'
+    ldarg.0
+    ldarg.s 11
+    stfld float64 PlotElement::'y_max'
+    ldarg.0
+    ldarg.s 12
     stfld float64 PlotElement::'point_size'
     ldarg.0
     newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
@@ -284,6 +293,9 @@
     ldarg.0
     newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
     stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    ldarg.0
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
     ret
   }
 }
@@ -1520,7 +1532,7 @@
   .method public static int32 '_hex_byte'(string 'hex_str', int32 'start') cil managed
   {
     .maxstack 11
-    .locals init (string 'sub', int32 '__slice2122651141840_start', valuetype TkvInt 'val', int32 'i', string 'ch', valuetype TkvInt 'cval', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'sub', int32 '__slice2027080844928_start', valuetype TkvInt 'val', int32 'i', string 'ch', valuetype TkvInt 'cval', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 1
     stloc.s 1
     ldarg.s 0
@@ -1734,7 +1746,7 @@
   .method public static class Color 'color_from_hex'(string 'hex_str') cil managed
   {
     .maxstack 12
-    .locals init (string 'clean', int32 '__slice2122650831504_start', int32 'ln', int32 'r', int32 'g', int32 'b', int32 'a', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'clean', int32 '__slice2027080574240_start', int32 'ln', int32 'r', int32 'g', int32 'b', int32 'a', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     stloc.s 0
     ldarg.s 0
@@ -1811,7 +1823,7 @@
   .method public static string '_byte_to_hex'(int32 'b') cil managed
   {
     .maxstack 10
-    .locals init (int32 'v', int32 'hi', int32 '__idiv2122650837104_a', int32 '__idiv2122650837104_b', int32 '__idiv2122650837104_q', int32 '__idiv2122650837104_r', int32 'lo', int32 '__idiv2122650837184_a', int32 '__idiv2122650837184_b', int32 '__idiv2122650837184_q', int32 '__idiv2122650837184_r', string 'digits', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (int32 'v', int32 'hi', int32 '__idiv2027080579840_a', int32 '__idiv2027080579840_b', int32 '__idiv2027080579840_q', int32 '__idiv2027080579840_r', int32 'lo', int32 '__idiv2027080579920_a', int32 '__idiv2027080579920_b', int32 '__idiv2027080579920_q', int32 '__idiv2027080579920_r', string 'digits', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     stloc.s 0
     ldloc.s 0
@@ -1919,7 +1931,7 @@
   .method public static string 'color_to_rgba_str'(class Color 'c') cil managed
   {
     .maxstack 10
-    .locals init (float64 'alpha', int32 '__strtmp2122650830784', int32 '__strtmp2122650837824', int32 '__strtmp2122650837984', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (float64 'alpha', int32 '__strtmp2027080580400', int32 '__strtmp2027080580560', int32 '__strtmp2027080580720', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     ldfld int32 Color::'a'
     conv.r8
@@ -2469,7 +2481,7 @@
   .method public static int32 'svg_draw_rect'(class SvgRenderer 'svg', float64 'x', float64 'y', float64 'width', float64 'height', class Color 'fill', class Color 'stroke', float64 'stroke_width') cil managed
   {
     .maxstack 10
-    .locals init (string 'line', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist5', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'line', float64 '__strtmp2027080608208', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist5', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldstr "<rect x=\""
     ldarg.s 1
     call string TkvStr::F64(float64)
@@ -2506,6 +2518,25 @@
     ldstr "\""
     call string [mscorlib]System.String::Concat(string, string)
     stloc.s 0
+    ldarg.s 5
+    ldfld int32 Color::'a'
+    ldc.i4 255
+    clt
+    brfalse svg_draw_rect_If2_else
+    ldloc.s 0
+    ldstr " fill-opacity=\""
+    call string [mscorlib]System.String::Concat(string, string)
+    ldarg.s 5
+    ldfld int32 Color::'a'
+    conv.r8
+    ldc.r8 255.0
+    div
+    call string TkvStr::F64(float64)
+    call string [mscorlib]System.String::Concat(string, string)
+    ldstr "\""
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 0
+  svg_draw_rect_If2_else:
     br svg_draw_rect_If1_end
   svg_draw_rect_If1_else:
     ldloc.s 0
@@ -2518,13 +2549,13 @@
     ldc.i4 0
     cgt
     dup
-    brfalse svg_draw_rect_sc3_end
+    brfalse svg_draw_rect_sc4_end
     pop
     ldarg.s 7
     ldc.r8 0.0
     cgt
-  svg_draw_rect_sc3_end:
-    brfalse svg_draw_rect_If2_else
+  svg_draw_rect_sc4_end:
+    brfalse svg_draw_rect_If3_else
     ldloc.s 0
     ldstr " stroke=\""
     call string [mscorlib]System.String::Concat(string, string)
@@ -2539,21 +2570,21 @@
     ldstr "\""
     call string [mscorlib]System.String::Concat(string, string)
     stloc.s 0
-    br svg_draw_rect_If2_end
-  svg_draw_rect_If2_else:
+    br svg_draw_rect_If3_end
+  svg_draw_rect_If3_else:
     ldloc.s 0
     ldstr " stroke=\"none\""
     call string [mscorlib]System.String::Concat(string, string)
     stloc.s 0
-  svg_draw_rect_If2_end:
+  svg_draw_rect_If3_end:
     ldloc.s 0
     ldstr " />"
     call string [mscorlib]System.String::Concat(string, string)
     stloc.s 0
     ldarg.s 0
     ldfld class [mscorlib]System.Collections.Generic.List`1<string> SvgRenderer::'body'
-    stloc.s 1
-    ldloc.s 1
+    stloc.s 2
+    ldloc.s 2
     ldloc.s 0
     callvirt instance void class [mscorlib]System.Collections.Generic.List`1<string>::Add(!0)
     ldc.i4 0
@@ -2754,7 +2785,7 @@
   .method public static int32 'svg_draw_polyline'(class SvgRenderer 'svg', class [mscorlib]System.Collections.Generic.List`1<float64> 'xs', class [mscorlib]System.Collections.Generic.List`1<float64> 'ys', class Color 'stroke', float64 'stroke_width') cil managed
   {
     .maxstack 10
-    .locals init (int32 'n', string 'pts', int32 'i', float64 '__strtmp2122650856928', float64 '__strtmp2122650857088', string 'line', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist9', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (int32 'n', string 'pts', int32 'i', float64 '__strtmp2027082239808', float64 '__strtmp2027082239968', string 'line', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist9', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 1
     callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
     stloc.s 0
@@ -2839,7 +2870,7 @@
   .method public static string 'svg_build'(class SvgRenderer 'svg') cil managed
   {
     .maxstack 10
-    .locals init (string 'w_str', float64 '__strtmp2122652059504', string 'h_str', float64 '__strtmp2122652059344', string 'res', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist10', int32 'i', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist11', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (string 'w_str', float64 '__strtmp2027082246128', string 'h_str', float64 '__strtmp2027082245968', string 'res', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist10', int32 'i', class [mscorlib]System.Collections.Generic.List`1<string> '__hoist11', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     ldfld float64 SvgRenderer::'width'
     call string TkvStr::F64(float64)
@@ -2913,7 +2944,7 @@
   }
   .method public static class PlotElement 'make_line_plot'(class [mscorlib]System.Collections.Generic.List`1<float64> 'xs', class [mscorlib]System.Collections.Generic.List`1<float64> 'ys', string 'label', class Color 'c', float64 'width') cil managed
   {
-    .maxstack 18
+    .maxstack 20
     .locals init (float64 'xmin', float64 'xmax', float64 'ymin', float64 'ymax', int32 'n', int32 'i', class PlotElement 'elem', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldc.r8 0.0
     stloc.s 0
@@ -3009,12 +3040,14 @@
     ldc.i4 1
     ldarg.s 3
     ldarg.s 4
+    ldc.i4 0
+    ldc.i4 0
     ldloc.s 0
     ldloc.s 1
     ldloc.s 2
     ldloc.s 3
     ldc.r8 1.0
-    newobj instance void PlotElement::.ctor(int32, string, int32, class Color, float64, float64, float64, float64, float64, float64)
+    newobj instance void PlotElement::.ctor(int32, string, int32, class Color, float64, int32, int32, float64, float64, float64, float64, float64)
     stloc.s 6
     ldloc.s 6
     ldarg.s 0
@@ -3022,6 +3055,9 @@
     ldloc.s 6
     ldarg.s 1
     stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    ldloc.s 6
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
     ldloc.s 6
     ret
   }
@@ -3043,6 +3079,120 @@
     ldarg.s 4
     stfld float64 PlotElement::'point_size'
     ldloc.s 0
+    ret
+  }
+  .method public static class PlotElement 'make_bar_plot'(class [mscorlib]System.Collections.Generic.List`1<float64> 'xs', class [mscorlib]System.Collections.Generic.List`1<float64> 'ys', string 'label', class Color 'c') cil managed
+  {
+    .maxstack 13
+    .locals init (class PlotElement 'elem', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    ldarg.s 0
+    ldarg.s 1
+    ldarg.s 2
+    ldarg.s 3
+    ldc.r8 1.0
+    call class PlotElement TKVApp::'make_line_plot'(class [mscorlib]System.Collections.Generic.List`1<float64>, class [mscorlib]System.Collections.Generic.List`1<float64>, string, class Color, float64)
+    stloc.s 0
+    ldloc.s 0
+    ldc.i4 3
+    stfld int32 PlotElement::'kind'
+    ldloc.s 0
+    ldfld float64 PlotElement::'y_min'
+    ldc.r8 0.0
+    cgt
+    brfalse make_bar_plot_If1_else
+    ldloc.s 0
+    ldc.r8 0.0
+    stfld float64 PlotElement::'y_min'
+  make_bar_plot_If1_else:
+    ldloc.s 0
+    ret
+  }
+  .method public static class PlotElement 'make_heatmap_plot'(class [mscorlib]System.Collections.Generic.List`1<float64> 'grid', int32 'rows', int32 'cols', string 'label', class Color 'c') cil managed
+  {
+    .maxstack 20
+    .locals init (class PlotElement 'elem', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    ldc.i4 4
+    ldarg.s 3
+    ldc.i4 1
+    ldarg.s 4
+    ldc.r8 1.0
+    ldarg.s 1
+    ldarg.s 2
+    ldc.r8 0.0
+    ldarg.s 2
+    conv.r8
+    ldc.r8 0.0
+    ldarg.s 1
+    conv.r8
+    ldc.r8 1.0
+    newobj instance void PlotElement::.ctor(int32, string, int32, class Color, float64, int32, int32, float64, float64, float64, float64, float64)
+    stloc.s 0
+    ldloc.s 0
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    ldloc.s 0
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    ldloc.s 0
+    ldarg.s 0
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    ldloc.s 0
+    ret
+  }
+  .method public static class PlotElement 'make_box_plot'(float64 'series_idx', float64 'q0_min', float64 'q1', float64 'med', float64 'q3', float64 'q4_max', string 'label', class Color 'c') cil managed
+  {
+    .maxstack 20
+    .locals init (class [mscorlib]System.Collections.Generic.List`1<float64> 'b_ys', class [mscorlib]System.Collections.Generic.List`1<float64> 'b_xs', class PlotElement 'elem', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stloc.s 0
+    ldloc.s 0
+    ldarg.s 1
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+    ldloc.s 0
+    ldarg.s 2
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+    ldloc.s 0
+    ldarg.s 3
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+    ldloc.s 0
+    ldarg.s 4
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+    ldloc.s 0
+    ldarg.s 5
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stloc.s 1
+    ldloc.s 1
+    ldarg.s 0
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+    ldc.i4 5
+    ldarg.s 6
+    ldc.i4 1
+    ldarg.s 7
+    ldc.r8 1.5
+    ldc.i4 0
+    ldc.i4 0
+    ldarg.s 0
+    ldc.r8 0.5
+    sub
+    ldarg.s 0
+    ldc.r8 0.5
+    add
+    ldarg.s 1
+    ldarg.s 5
+    ldc.r8 1.0
+    newobj instance void PlotElement::.ctor(int32, string, int32, class Color, float64, int32, int32, float64, float64, float64, float64, float64)
+    stloc.s 2
+    ldloc.s 2
+    ldloc.s 1
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    ldloc.s 2
+    ldloc.s 0
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    ldloc.s 2
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
+    stfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    ldloc.s 2
     ret
   }
   .method public static class Axes2D 'make_axes2d'() cil managed
@@ -3084,7 +3234,7 @@
   .method public static string 'figure_to_svg'(class Figure 'fig') cil managed
   {
     .maxstack 16
-    .locals init (float64 'px_w', float64 'px_h', class SvgRenderer 'svg', class StyleTheme 'th', float64 'plot_l', float64 'plot_t', float64 'plot_w', float64 'plot_h', float64 'xmin', float64 'xmax', float64 'ymin', float64 'ymax', class Axes2D 'ax', class [mscorlib]System.Collections.Generic.List`1<class PlotElement> 'elems', class PlotElement 'e0', class CoordinateTransform 'tx', class CoordinateTransform 'ty', int32 'i', class PlotElement 'e', class [mscorlib]System.Collections.Generic.List`1<float64> 'pxs', class [mscorlib]System.Collections.Generic.List`1<float64> 'pys', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist13', int32 'k', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist14', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist15', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist16', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist17', float64 'sx', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist18', float64 'sy', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    .locals init (float64 'px_w', float64 'px_h', class SvgRenderer 'svg', class StyleTheme 'th', float64 'plot_l', float64 'plot_t', float64 'plot_w', float64 'plot_h', float64 'xmin', float64 'xmax', float64 'ymin', float64 'ymax', class Axes2D 'ax', class [mscorlib]System.Collections.Generic.List`1<class PlotElement> 'elems', valuetype TkvInt 'has_init', int32 'i', class PlotElement 'e', float64 'x_pad', float64 'y_pad', class CoordinateTransform 'tx', class CoordinateTransform 'ty', class [mscorlib]System.Collections.Generic.List`1<class Tick> 'x_ticks', class Tick 'tk', float64 'sx', class [mscorlib]System.Collections.Generic.List`1<class Tick> 'y_ticks', float64 'sy', class ColorMap 'viridis', valuetype TkvInt 'has_legend', class [mscorlib]System.Collections.Generic.List`1<string> 'legend_labels', class [mscorlib]System.Collections.Generic.List`1<class Color> 'legend_colors', class [mscorlib]System.Collections.Generic.List`1<float64> 'pxs', class [mscorlib]System.Collections.Generic.List`1<float64> 'pys', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist13', int32 'k', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist14', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist15', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist16', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist17', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist18', float64 'bar_w', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist19', int32 'num_bars', float64 'zero_y', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist20', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist21', float64 'bx', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist22', float64 'by', float64 'bh', int32 'r_cnt', int32 'c_cnt', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist23', float64 'g_min', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist24', float64 'g_max', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist25', int32 'total_cells', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist26', float64 'v', float64 'g_range', float64 'cell_w', float64 'cell_h', int32 'r', int32 'c', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist27', float64 'cell_val', float64 'norm_t', class Color 'cell_col', float64 'cx', float64 'cy', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist28', float64 'center_x', float64 'box_w', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist29', float64 'sy_min', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist30', float64 'sy_q1', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist31', float64 'sy_med', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist32', float64 'sy_q3', class [mscorlib]System.Collections.Generic.List`1<float64> '__hoist33', float64 'sy_max', float64 'box_top', float64 'box_height', class Color 'ec', class Color 'box_c', float64 'leg_x', float64 'leg_y', float64 'leg_h', float64 'item_y', string '__hoist34', string '__hoist35', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
     ldarg.s 0
     ldfld float64 Figure::'width_inches'
     ldarg.s 0
@@ -3117,16 +3267,16 @@
     ldc.r8 0.0
     call int32 TKVApp::'svg_draw_rect'(class SvgRenderer, float64, float64, float64, float64, class Color, class Color, float64)
     pop
-    ldc.r8 70.0
+    ldc.r8 75.0
     stloc.s 4
-    ldc.r8 50.0
+    ldc.r8 60.0
     stloc.s 5
     ldloc.s 0
-    ldc.r8 100.0
+    ldc.r8 110.0
     sub
     stloc.s 6
     ldloc.s 1
-    ldc.r8 110.0
+    ldc.r8 130.0
     sub
     stloc.s 7
     ldloc.s 2
@@ -3156,28 +3306,144 @@
     ldloc.s 12
     ldfld class [mscorlib]System.Collections.Generic.List`1<class PlotElement> Axes2D::'elements'
     stloc.s 13
+    ldc.i8 0
+    call valuetype TkvInt TkvInt::FromI64(int64)
+    stloc.s 14
+    ldc.i4.0
+    stloc.s 15
+  figure_to_svg_L1_start:
+    ldloc.s 15
     ldloc.s 13
     callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<class PlotElement>::get_Count()
-    ldc.i4 0
-    cgt
-    brfalse figure_to_svg_If1_else
+    bge figure_to_svg_L1_end
     ldloc.s 13
-    ldc.i4 0
+    ldloc.s 15
     callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<class PlotElement>::get_Item(int32)
-    stloc.s 14
+    stloc.s 16
+    ldloc.s 16
+    ldfld int32 PlotElement::'visible'
+    ldc.i4 1
+    ceq
+    brfalse figure_to_svg_If2_else
     ldloc.s 14
+    ldc.i8 0
+    call valuetype TkvInt TkvInt::FromI64(int64)
+    call int32 TkvInt::Cmp(valuetype TkvInt, valuetype TkvInt)
+    ldc.i4.0
+    ceq
+    brfalse figure_to_svg_If3_else
+    ldloc.s 16
     ldfld float64 PlotElement::'x_min'
     stloc.s 8
-    ldloc.s 14
+    ldloc.s 16
     ldfld float64 PlotElement::'x_max'
     stloc.s 9
-    ldloc.s 14
+    ldloc.s 16
     ldfld float64 PlotElement::'y_min'
     stloc.s 10
-    ldloc.s 14
+    ldloc.s 16
     ldfld float64 PlotElement::'y_max'
     stloc.s 11
-  figure_to_svg_If1_else:
+    ldc.i8 1
+    call valuetype TkvInt TkvInt::FromI64(int64)
+    stloc.s 14
+    br figure_to_svg_If3_end
+  figure_to_svg_If3_else:
+    ldloc.s 16
+    ldfld float64 PlotElement::'x_min'
+    ldloc.s 8
+    clt
+    brfalse figure_to_svg_If4_else
+    ldloc.s 16
+    ldfld float64 PlotElement::'x_min'
+    stloc.s 8
+  figure_to_svg_If4_else:
+    ldloc.s 16
+    ldfld float64 PlotElement::'x_max'
+    ldloc.s 9
+    cgt
+    brfalse figure_to_svg_If5_else
+    ldloc.s 16
+    ldfld float64 PlotElement::'x_max'
+    stloc.s 9
+  figure_to_svg_If5_else:
+    ldloc.s 16
+    ldfld float64 PlotElement::'y_min'
+    ldloc.s 10
+    clt
+    brfalse figure_to_svg_If6_else
+    ldloc.s 16
+    ldfld float64 PlotElement::'y_min'
+    stloc.s 10
+  figure_to_svg_If6_else:
+    ldloc.s 16
+    ldfld float64 PlotElement::'y_max'
+    ldloc.s 11
+    cgt
+    brfalse figure_to_svg_If7_else
+    ldloc.s 16
+    ldfld float64 PlotElement::'y_max'
+    stloc.s 11
+  figure_to_svg_If7_else:
+  figure_to_svg_If3_end:
+  figure_to_svg_If2_else:
+  figure_to_svg_L1_cont:
+    ldloc.s 15
+    ldc.i4 1
+    add
+    stloc.s 15
+    br figure_to_svg_L1_start
+  figure_to_svg_L1_end:
+    ldloc.s 8
+    ldloc.s 9
+    clt
+    ldc.i4.0
+    ceq
+    brfalse figure_to_svg_If8_else
+    ldc.r8 0.0
+    stloc.s 8
+    ldc.r8 1.0
+    stloc.s 9
+  figure_to_svg_If8_else:
+    ldloc.s 10
+    ldloc.s 11
+    clt
+    ldc.i4.0
+    ceq
+    brfalse figure_to_svg_If9_else
+    ldc.r8 0.0
+    stloc.s 10
+    ldc.r8 1.0
+    stloc.s 11
+  figure_to_svg_If9_else:
+    ldloc.s 9
+    ldloc.s 8
+    sub
+    ldc.r8 0.05
+    mul
+    stloc.s 17
+    ldloc.s 11
+    ldloc.s 10
+    sub
+    ldc.r8 0.05
+    mul
+    stloc.s 18
+    ldloc.s 8
+    ldloc.s 17
+    sub
+    stloc.s 8
+    ldloc.s 9
+    ldloc.s 17
+    add
+    stloc.s 9
+    ldloc.s 10
+    ldloc.s 18
+    sub
+    stloc.s 10
+    ldloc.s 11
+    ldloc.s 18
+    add
+    stloc.s 11
     ldc.i4 0
     ldloc.s 8
     ldloc.s 9
@@ -3186,7 +3452,7 @@
     ldloc.s 6
     add
     call class CoordinateTransform TKVApp::'make_coord_transform'(int32, float64, float64, float64, float64)
-    stloc.s 15
+    stloc.s 19
     ldc.i4 0
     ldloc.s 10
     ldloc.s 11
@@ -3195,137 +3461,1095 @@
     add
     ldloc.s 5
     call class CoordinateTransform TKVApp::'make_coord_transform'(int32, float64, float64, float64, float64)
-    stloc.s 16
+    stloc.s 20
+    ldloc.s 8
+    ldloc.s 9
+    ldc.i4 6
+    call class [mscorlib]System.Collections.Generic.List`1<class Tick> TKVApp::'ticks_generate_linear'(float64, float64, int32)
+    stloc.s 21
     ldc.i4.0
-    stloc.s 17
-  figure_to_svg_L2_start:
-    ldloc.s 17
+    stloc.s 15
+  figure_to_svg_L10_start:
+    ldloc.s 15
+    ldloc.s 21
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<class Tick>::get_Count()
+    bge figure_to_svg_L10_end
+    ldloc.s 21
+    ldloc.s 15
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<class Tick>::get_Item(int32)
+    stloc.s 22
+    ldloc.s 19
+    ldloc.s 22
+    ldfld float64 Tick::'position'
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 23
+    ldloc.s 23
+    ldloc.s 4
+    clt
+    ldc.i4.0
+    ceq
+    dup
+    brfalse figure_to_svg_sc12_end
+    pop
+    ldloc.s 23
+    ldloc.s 4
+    ldloc.s 6
+    add
+    cgt
+    ldc.i4.0
+    ceq
+  figure_to_svg_sc12_end:
+    brfalse figure_to_svg_If11_else
+    ldloc.s 2
+    ldloc.s 23
+    ldloc.s 5
+    ldloc.s 23
+    ldloc.s 5
+    ldloc.s 7
+    add
+    ldloc.s 3
+    ldfld class Color StyleTheme::'grid_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'grid_line_width'
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 22
+    ldfld string Tick::'label'
+    ldloc.s 23
+    ldc.r8 10.0
+    sub
+    ldloc.s 5
+    ldloc.s 7
+    add
+    ldc.r8 18.0
+    add
+    ldloc.s 3
+    ldfld class Color StyleTheme::'text_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'tick_label_font_size'
+    call int32 TKVApp::'svg_draw_text'(class SvgRenderer, string, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_If11_else:
+  figure_to_svg_L10_cont:
+    ldloc.s 15
+    ldc.i4 1
+    add
+    stloc.s 15
+    br figure_to_svg_L10_start
+  figure_to_svg_L10_end:
+    ldloc.s 10
+    ldloc.s 11
+    ldc.i4 6
+    call class [mscorlib]System.Collections.Generic.List`1<class Tick> TKVApp::'ticks_generate_linear'(float64, float64, int32)
+    stloc.s 24
+    ldc.i4.0
+    stloc.s 15
+  figure_to_svg_L13_start:
+    ldloc.s 15
+    ldloc.s 24
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<class Tick>::get_Count()
+    bge figure_to_svg_L13_end
+    ldloc.s 24
+    ldloc.s 15
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<class Tick>::get_Item(int32)
+    stloc.s 22
+    ldloc.s 20
+    ldloc.s 22
+    ldfld float64 Tick::'position'
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 25
+    ldloc.s 25
+    ldloc.s 5
+    clt
+    ldc.i4.0
+    ceq
+    dup
+    brfalse figure_to_svg_sc15_end
+    pop
+    ldloc.s 25
+    ldloc.s 5
+    ldloc.s 7
+    add
+    cgt
+    ldc.i4.0
+    ceq
+  figure_to_svg_sc15_end:
+    brfalse figure_to_svg_If14_else
+    ldloc.s 2
+    ldloc.s 4
+    ldloc.s 25
+    ldloc.s 4
+    ldloc.s 6
+    add
+    ldloc.s 25
+    ldloc.s 3
+    ldfld class Color StyleTheme::'grid_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'grid_line_width'
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 22
+    ldfld string Tick::'label'
+    ldloc.s 4
+    ldc.r8 40.0
+    sub
+    ldloc.s 25
+    ldc.r8 4.0
+    add
+    ldloc.s 3
+    ldfld class Color StyleTheme::'text_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'tick_label_font_size'
+    call int32 TKVApp::'svg_draw_text'(class SvgRenderer, string, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_If14_else:
+  figure_to_svg_L13_cont:
+    ldloc.s 15
+    ldc.i4 1
+    add
+    stloc.s 15
+    br figure_to_svg_L13_start
+  figure_to_svg_L13_end:
+    call class ColorMap TKVApp::'get_viridis_colormap'()
+    stloc.s 26
+    ldc.i8 0
+    call valuetype TkvInt TkvInt::FromI64(int64)
+    stloc.s 27
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<string>::.ctor()
+    stloc.s 28
+    newobj instance void class [mscorlib]System.Collections.Generic.List`1<class Color>::.ctor()
+    stloc.s 29
+    ldc.i4.0
+    stloc.s 15
+  figure_to_svg_L16_start:
+    ldloc.s 15
     ldloc.s 13
     callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<class PlotElement>::get_Count()
-    bge figure_to_svg_L2_end
+    bge figure_to_svg_L16_end
     ldloc.s 13
-    ldloc.s 17
+    ldloc.s 15
     callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<class PlotElement>::get_Item(int32)
-    stloc.s 18
-    ldloc.s 18
+    stloc.s 16
+    ldloc.s 16
+    ldfld int32 PlotElement::'visible'
+    ldc.i4 0
+    ceq
+    brfalse figure_to_svg_If17_else
+    br figure_to_svg_L16_cont
+  figure_to_svg_If17_else:
+    ldloc.s 16
+    ldfld string PlotElement::'label'
+    callvirt instance int32 [mscorlib]System.String::get_Length()
+    ldc.i4 0
+    cgt
+    brfalse figure_to_svg_If18_else
+    ldc.i8 1
+    call valuetype TkvInt TkvInt::FromI64(int64)
+    stloc.s 27
+    ldloc.s 28
+    ldloc.s 16
+    ldfld string PlotElement::'label'
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<string>::Add(!0)
+    ldloc.s 29
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<class Color>::Add(!0)
+  figure_to_svg_If18_else:
+    ldloc.s 16
     ldfld int32 PlotElement::'kind'
     ldc.i4 1
     ceq
-    brfalse figure_to_svg_If3_else
+    brfalse figure_to_svg_If19_else
     newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
-    stloc.s 19
+    stloc.s 30
     newobj instance void class [mscorlib]System.Collections.Generic.List`1<float64>::.ctor()
-    stloc.s 20
-    ldloc.s 18
-    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
-    stloc.s 21
-    ldc.i4.0
-    stloc.s 22
-  figure_to_svg_L4_start:
-    ldloc.s 22
-    ldloc.s 21
-    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
-    bge figure_to_svg_L4_end
-    ldloc.s 18
-    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
-    stloc.s 23
-    ldloc.s 19
-    ldloc.s 15
-    ldloc.s 23
-    ldloc.s 22
-    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
-    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
-    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
-    ldloc.s 18
-    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
-    stloc.s 24
-    ldloc.s 20
+    stloc.s 31
     ldloc.s 16
-    ldloc.s 24
-    ldloc.s 22
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 32
+    ldc.i4.0
+    stloc.s 33
+  figure_to_svg_L20_start:
+    ldloc.s 33
+    ldloc.s 32
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    bge figure_to_svg_L20_end
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 34
+    ldloc.s 30
+    ldloc.s 19
+    ldloc.s 34
+    ldloc.s 33
     callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
     call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
     callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
-  figure_to_svg_L4_cont:
-    ldloc.s 22
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 35
+    ldloc.s 31
+    ldloc.s 20
+    ldloc.s 35
+    ldloc.s 33
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    callvirt instance void class [mscorlib]System.Collections.Generic.List`1<float64>::Add(!0)
+  figure_to_svg_L20_cont:
+    ldloc.s 33
     ldc.i4 1
     add
-    stloc.s 22
-    br figure_to_svg_L4_start
-  figure_to_svg_L4_end:
+    stloc.s 33
+    br figure_to_svg_L20_start
+  figure_to_svg_L20_end:
     ldloc.s 2
-    ldloc.s 19
-    ldloc.s 20
-    ldloc.s 18
+    ldloc.s 30
+    ldloc.s 31
+    ldloc.s 16
     ldfld class Color PlotElement::'color'
-    ldloc.s 18
+    ldloc.s 16
     ldfld float64 PlotElement::'line_width'
     call int32 TKVApp::'svg_draw_polyline'(class SvgRenderer, class [mscorlib]System.Collections.Generic.List`1<float64>, class [mscorlib]System.Collections.Generic.List`1<float64>, class Color, float64)
     pop
-    br figure_to_svg_If3_end
-  figure_to_svg_If3_else:
-    ldloc.s 18
+    br figure_to_svg_If19_end
+  figure_to_svg_If19_else:
+    ldloc.s 16
     ldfld int32 PlotElement::'kind'
     ldc.i4 2
     ceq
-    brfalse figure_to_svg_If5_else
-    ldloc.s 18
-    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
-    stloc.s 25
-    ldc.i4.0
-    stloc.s 22
-  figure_to_svg_L6_start:
-    ldloc.s 22
-    ldloc.s 25
-    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
-    bge figure_to_svg_L6_end
-    ldloc.s 18
-    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
-    stloc.s 26
-    ldloc.s 15
-    ldloc.s 26
-    ldloc.s 22
-    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
-    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
-    stloc.s 27
-    ldloc.s 18
-    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
-    stloc.s 28
+    brfalse figure_to_svg_If21_else
     ldloc.s 16
-    ldloc.s 28
-    ldloc.s 22
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 36
+    ldc.i4.0
+    stloc.s 33
+  figure_to_svg_L22_start:
+    ldloc.s 33
+    ldloc.s 36
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    bge figure_to_svg_L22_end
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 37
+    ldloc.s 19
+    ldloc.s 37
+    ldloc.s 33
     callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
     call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
-    stloc.s 29
+    stloc.s 23
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 38
+    ldloc.s 20
+    ldloc.s 38
+    ldloc.s 33
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 25
     ldloc.s 2
-    ldloc.s 27
-    ldloc.s 29
-    ldloc.s 18
+    ldloc.s 23
+    ldloc.s 25
+    ldloc.s 16
     ldfld float64 PlotElement::'point_size'
-    ldloc.s 18
+    ldloc.s 16
     ldfld class Color PlotElement::'color'
     call class Color TKVApp::'color_transparent'()
     ldc.r8 0.0
     call int32 TKVApp::'svg_draw_circle'(class SvgRenderer, float64, float64, float64, class Color, class Color, float64)
     pop
-  figure_to_svg_L6_cont:
-    ldloc.s 22
+  figure_to_svg_L22_cont:
+    ldloc.s 33
     ldc.i4 1
     add
-    stloc.s 22
-    br figure_to_svg_L6_start
-  figure_to_svg_L6_end:
-  figure_to_svg_If5_else:
-  figure_to_svg_If3_end:
-  figure_to_svg_L2_cont:
-    ldloc.s 17
+    stloc.s 33
+    br figure_to_svg_L22_start
+  figure_to_svg_L22_end:
+    br figure_to_svg_If21_end
+  figure_to_svg_If21_else:
+    ldloc.s 16
+    ldfld int32 PlotElement::'kind'
+    ldc.i4 3
+    ceq
+    brfalse figure_to_svg_If23_else
+    ldc.r8 20.0
+    stloc.s 39
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 40
+    ldloc.s 40
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    stloc.s 41
+    ldloc.s 41
+    ldc.i4 0
+    cgt
+    brfalse figure_to_svg_If24_else
+    ldloc.s 6
+    ldloc.s 41
+    conv.r8
+    div
+    ldc.r8 0.7
+    mul
+    stloc.s 39
+  figure_to_svg_If24_else:
+    ldloc.s 20
+    ldc.r8 0.0
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 42
+    ldloc.s 42
+    ldloc.s 5
+    ldloc.s 7
+    add
+    cgt
+    brfalse figure_to_svg_If25_else
+    ldloc.s 5
+    ldloc.s 7
+    add
+    stloc.s 42
+  figure_to_svg_If25_else:
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 43
+    ldc.i4.0
+    stloc.s 33
+  figure_to_svg_L26_start:
+    ldloc.s 33
+    ldloc.s 43
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    bge figure_to_svg_L26_end
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 44
+    ldloc.s 19
+    ldloc.s 44
+    ldloc.s 33
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    ldloc.s 39
+    ldc.r8 0.5
+    mul
+    sub
+    stloc.s 45
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 46
+    ldloc.s 20
+    ldloc.s 46
+    ldloc.s 33
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 47
+    ldloc.s 42
+    ldloc.s 47
+    sub
+    stloc.s 48
+    ldloc.s 48
+    ldc.r8 0.0
+    clt
+    brfalse figure_to_svg_If27_else
+    ldloc.s 48
+    neg
+    stloc.s 48
+    ldloc.s 42
+    stloc.s 47
+  figure_to_svg_If27_else:
+    ldloc.s 2
+    ldloc.s 45
+    ldloc.s 47
+    ldloc.s 39
+    ldloc.s 48
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    ldloc.s 3
+    ldfld class Color StyleTheme::'axis_color'
+    ldc.r8 1.0
+    call int32 TKVApp::'svg_draw_rect'(class SvgRenderer, float64, float64, float64, float64, class Color, class Color, float64)
+    pop
+  figure_to_svg_L26_cont:
+    ldloc.s 33
     ldc.i4 1
     add
-    stloc.s 17
-    br figure_to_svg_L2_start
-  figure_to_svg_L2_end:
+    stloc.s 33
+    br figure_to_svg_L26_start
+  figure_to_svg_L26_end:
+    br figure_to_svg_If23_end
+  figure_to_svg_If23_else:
+    ldloc.s 16
+    ldfld int32 PlotElement::'kind'
+    ldc.i4 4
+    ceq
+    brfalse figure_to_svg_If28_else
+    ldloc.s 16
+    ldfld int32 PlotElement::'grid_rows'
+    stloc.s 49
+    ldloc.s 16
+    ldfld int32 PlotElement::'grid_cols'
+    stloc.s 50
+    ldloc.s 49
+    ldc.i4 0
+    cgt
+    dup
+    brfalse figure_to_svg_sc30_end
+    pop
+    ldloc.s 50
+    ldc.i4 0
+    cgt
+  figure_to_svg_sc30_end:
+    brfalse figure_to_svg_If29_else
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    stloc.s 51
+    ldloc.s 51
+    ldc.i4 0
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    stloc.s 52
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    stloc.s 53
+    ldloc.s 53
+    ldc.i4 0
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    stloc.s 54
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    stloc.s 55
+    ldloc.s 55
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    stloc.s 56
+    ldc.i4.0
+    stloc.s 33
+  figure_to_svg_L31_start:
+    ldloc.s 33
+    ldloc.s 56
+    bge figure_to_svg_L31_end
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    stloc.s 57
+    ldloc.s 57
+    ldloc.s 33
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    stloc.s 58
+    ldloc.s 58
+    ldloc.s 52
+    clt
+    brfalse figure_to_svg_If32_else
+    ldloc.s 58
+    stloc.s 52
+  figure_to_svg_If32_else:
+    ldloc.s 58
+    ldloc.s 54
+    cgt
+    brfalse figure_to_svg_If33_else
+    ldloc.s 58
+    stloc.s 54
+  figure_to_svg_If33_else:
+  figure_to_svg_L31_cont:
+    ldloc.s 33
+    ldc.i4 1
+    add
+    stloc.s 33
+    br figure_to_svg_L31_start
+  figure_to_svg_L31_end:
+    ldloc.s 54
+    ldloc.s 52
+    sub
+    stloc.s 59
+    ldloc.s 59
+    ldc.r8 0.000000001
+    clt
+    brfalse figure_to_svg_If34_else
+    ldc.r8 1.0
+    stloc.s 59
+  figure_to_svg_If34_else:
+    ldloc.s 6
+    ldloc.s 50
+    conv.r8
+    div
+    stloc.s 60
+    ldloc.s 7
+    ldloc.s 49
+    conv.r8
+    div
+    stloc.s 61
+    ldc.i4.0
+    stloc.s 62
+  figure_to_svg_L35_start:
+    ldloc.s 62
+    ldloc.s 49
+    bge figure_to_svg_L35_end
+    ldc.i4.0
+    stloc.s 63
+  figure_to_svg_L36_start:
+    ldloc.s 63
+    ldloc.s 50
+    bge figure_to_svg_L36_end
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'grid_data'
+    stloc.s 64
+    ldloc.s 64
+    ldloc.s 62
+    ldloc.s 50
+    mul.ovf
+    ldloc.s 63
+    add.ovf
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    stloc.s 65
+    ldloc.s 65
+    ldloc.s 52
+    sub
+    ldloc.s 59
+    div
+    stloc.s 66
+    ldloc.s 26
+    ldloc.s 66
+    call class Color TKVApp::'colormap_sample'(class ColorMap, float64)
+    stloc.s 67
+    ldloc.s 4
+    ldloc.s 63
+    conv.r8
+    ldloc.s 60
+    mul
+    add
+    stloc.s 68
+    ldloc.s 5
+    ldloc.s 62
+    conv.r8
+    ldloc.s 61
+    mul
+    add
+    stloc.s 69
+    ldloc.s 2
+    ldloc.s 68
+    ldloc.s 69
+    ldloc.s 60
+    ldc.r8 0.5
+    add
+    ldloc.s 61
+    ldc.r8 0.5
+    add
+    ldloc.s 67
+    call class Color TKVApp::'color_transparent'()
+    ldc.r8 0.0
+    call int32 TKVApp::'svg_draw_rect'(class SvgRenderer, float64, float64, float64, float64, class Color, class Color, float64)
+    pop
+  figure_to_svg_L36_cont:
+    ldloc.s 63
+    ldc.i4 1
+    add
+    stloc.s 63
+    br figure_to_svg_L36_start
+  figure_to_svg_L36_end:
+  figure_to_svg_L35_cont:
+    ldloc.s 62
+    ldc.i4 1
+    add
+    stloc.s 62
+    br figure_to_svg_L35_start
+  figure_to_svg_L35_end:
+  figure_to_svg_If29_else:
+    br figure_to_svg_If28_end
+  figure_to_svg_If28_else:
+    ldloc.s 16
+    ldfld int32 PlotElement::'kind'
+    ldc.i4 5
+    ceq
+    brfalse figure_to_svg_If37_else
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    ldc.i4 5
+    clt
+    ldc.i4.0
+    ceq
+    dup
+    brfalse figure_to_svg_sc39_end
+    pop
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Count()
+    ldc.i4 1
+    clt
+    ldc.i4.0
+    ceq
+  figure_to_svg_sc39_end:
+    brfalse figure_to_svg_If38_else
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'xs'
+    stloc.s 70
+    ldloc.s 19
+    ldloc.s 70
+    ldc.i4 0
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 71
+    ldc.r8 30.0
+    stloc.s 72
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 73
+    ldloc.s 20
+    ldloc.s 73
+    ldc.i4 0
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 74
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 75
+    ldloc.s 20
+    ldloc.s 75
+    ldc.i4 1
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 76
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 77
+    ldloc.s 20
+    ldloc.s 77
+    ldc.i4 2
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 78
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 79
+    ldloc.s 20
+    ldloc.s 79
+    ldc.i4 3
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 80
+    ldloc.s 16
+    ldfld class [mscorlib]System.Collections.Generic.List`1<float64> PlotElement::'ys'
+    stloc.s 81
+    ldloc.s 20
+    ldloc.s 81
+    ldc.i4 4
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<float64>::get_Item(int32)
+    call float64 TKVApp::'transform_to_target'(class CoordinateTransform, float64)
+    stloc.s 82
+    ldloc.s 2
+    ldloc.s 71
+    ldloc.s 74
+    ldloc.s 71
+    ldloc.s 76
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    ldc.r8 1.5
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 71
+    ldloc.s 80
+    ldloc.s 71
+    ldloc.s 82
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    ldc.r8 1.5
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.3
+    mul
+    sub
+    ldloc.s 74
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.3
+    mul
+    add
+    ldloc.s 74
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    ldc.r8 1.5
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.3
+    mul
+    sub
+    ldloc.s 82
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.3
+    mul
+    add
+    ldloc.s 82
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    ldc.r8 1.5
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 80
+    stloc.s 83
+    ldloc.s 76
+    ldloc.s 80
+    sub
+    stloc.s 84
+    ldloc.s 16
+    ldfld class Color PlotElement::'color'
+    stloc.s 85
+    ldloc.s 85
+    ldfld int32 Color::'r'
+    ldloc.s 85
+    ldfld int32 Color::'g'
+    ldloc.s 85
+    ldfld int32 Color::'b'
+    ldc.i4 120
+    call class Color TKVApp::'make_color'(int32, int32, int32, int32)
+    stloc.s 86
+    ldloc.s 2
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.5
+    mul
+    sub
+    ldloc.s 83
+    ldloc.s 72
+    ldloc.s 84
+    ldloc.s 86
+    ldloc.s 85
+    ldc.r8 1.5
+    call int32 TKVApp::'svg_draw_rect'(class SvgRenderer, float64, float64, float64, float64, class Color, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.5
+    mul
+    sub
+    ldloc.s 78
+    ldloc.s 71
+    ldloc.s 72
+    ldc.r8 0.5
+    mul
+    add
+    ldloc.s 78
+    call class Color TKVApp::'color_black'()
+    ldc.r8 2.0
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_If38_else:
+  figure_to_svg_If37_else:
+  figure_to_svg_If28_end:
+  figure_to_svg_If23_end:
+  figure_to_svg_If21_end:
+  figure_to_svg_If19_end:
+  figure_to_svg_L16_cont:
+    ldloc.s 15
+    ldc.i4 1
+    add
+    stloc.s 15
+    br figure_to_svg_L16_start
+  figure_to_svg_L16_end:
+    ldloc.s 27
+    ldc.i8 1
+    call valuetype TkvInt TkvInt::FromI64(int64)
+    call int32 TkvInt::Cmp(valuetype TkvInt, valuetype TkvInt)
+    ldc.i4.0
+    ceq
+    brfalse figure_to_svg_If40_else
+    ldloc.s 4
+    ldloc.s 6
+    add
+    ldc.r8 140.0
+    sub
+    stloc.s 87
+    ldloc.s 5
+    ldc.r8 15.0
+    add
+    stloc.s 88
+    ldloc.s 28
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<string>::get_Count()
+    conv.r8
+    ldc.r8 22.0
+    mul
+    ldc.r8 15.0
+    add
+    stloc.s 89
+    ldloc.s 2
+    ldloc.s 87
+    ldloc.s 88
+    ldc.r8 130.0
+    ldloc.s 89
+    ldloc.s 3
+    ldfld class Color StyleTheme::'legend_bg'
+    ldloc.s 3
+    ldfld class Color StyleTheme::'legend_border'
+    ldc.r8 1.0
+    call int32 TKVApp::'svg_draw_rect'(class SvgRenderer, float64, float64, float64, float64, class Color, class Color, float64)
+    pop
+    ldc.i4.0
+    stloc.s 15
+  figure_to_svg_L41_start:
+    ldloc.s 15
+    ldloc.s 28
+    callvirt instance int32 class [mscorlib]System.Collections.Generic.List`1<string>::get_Count()
+    bge figure_to_svg_L41_end
+    ldloc.s 88
+    ldloc.s 15
+    conv.r8
+    ldc.r8 22.0
+    mul
+    add
+    ldc.r8 16.0
+    add
+    stloc.s 90
+    ldloc.s 2
+    ldloc.s 87
+    ldc.r8 10.0
+    add
+    ldloc.s 90
+    ldloc.s 87
+    ldc.r8 30.0
+    add
+    ldloc.s 90
+    ldloc.s 29
+    ldloc.s 15
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<class Color>::get_Item(int32)
+    ldc.r8 2.5
+    call int32 TKVApp::'svg_draw_line'(class SvgRenderer, float64, float64, float64, float64, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 87
+    ldc.r8 20.0
+    add
+    ldloc.s 90
+    ldc.r8 3.5
+    ldloc.s 29
+    ldloc.s 15
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<class Color>::get_Item(int32)
+    call class Color TKVApp::'color_transparent'()
+    ldc.r8 0.0
+    call int32 TKVApp::'svg_draw_circle'(class SvgRenderer, float64, float64, float64, class Color, class Color, float64)
+    pop
+    ldloc.s 2
+    ldloc.s 28
+    ldloc.s 15
+    callvirt instance !0 class [mscorlib]System.Collections.Generic.List`1<string>::get_Item(int32)
+    ldloc.s 87
+    ldc.r8 38.0
+    add
+    ldloc.s 90
+    ldc.r8 4.0
+    add
+    ldloc.s 3
+    ldfld class Color StyleTheme::'text_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'legend_font_size'
+    call int32 TKVApp::'svg_draw_text'(class SvgRenderer, string, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_L41_cont:
+    ldloc.s 15
+    ldc.i4 1
+    add
+    stloc.s 15
+    br figure_to_svg_L41_start
+  figure_to_svg_L41_end:
+  figure_to_svg_If40_else:
+    ldloc.s 12
+    ldfld string Axes2D::'title'
+    callvirt instance int32 [mscorlib]System.String::get_Length()
+    ldc.i4 0
+    cgt
+    brfalse figure_to_svg_If42_else
+    ldloc.s 12
+    ldfld string Axes2D::'title'
+    stloc.s 91
+    ldloc.s 2
+    ldloc.s 12
+    ldfld string Axes2D::'title'
+    ldloc.s 4
+    ldloc.s 6
+    ldc.r8 0.5
+    mul
+    add
+    ldloc.s 91
+    callvirt instance int32 [mscorlib]System.String::get_Length()
+    conv.r8
+    ldc.r8 4.0
+    mul
+    sub
+    ldloc.s 5
+    ldc.r8 20.0
+    sub
+    ldloc.s 3
+    ldfld class Color StyleTheme::'title_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'title_font_size'
+    call int32 TKVApp::'svg_draw_text'(class SvgRenderer, string, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_If42_else:
+    ldloc.s 12
+    ldfld string Axes2D::'xlabel'
+    callvirt instance int32 [mscorlib]System.String::get_Length()
+    ldc.i4 0
+    cgt
+    brfalse figure_to_svg_If43_else
+    ldloc.s 12
+    ldfld string Axes2D::'xlabel'
+    stloc.s 92
+    ldloc.s 2
+    ldloc.s 12
+    ldfld string Axes2D::'xlabel'
+    ldloc.s 4
+    ldloc.s 6
+    ldc.r8 0.5
+    mul
+    add
+    ldloc.s 92
+    callvirt instance int32 [mscorlib]System.String::get_Length()
+    conv.r8
+    ldc.r8 3.5
+    mul
+    sub
+    ldloc.s 5
+    ldloc.s 7
+    add
+    ldc.r8 45.0
+    add
+    ldloc.s 3
+    ldfld class Color StyleTheme::'text_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'axis_label_font_size'
+    call int32 TKVApp::'svg_draw_text'(class SvgRenderer, string, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_If43_else:
+    ldloc.s 12
+    ldfld string Axes2D::'ylabel'
+    callvirt instance int32 [mscorlib]System.String::get_Length()
+    ldc.i4 0
+    cgt
+    brfalse figure_to_svg_If44_else
+    ldloc.s 2
+    ldloc.s 12
+    ldfld string Axes2D::'ylabel'
+    ldloc.s 4
+    ldc.r8 55.0
+    sub
+    ldloc.s 5
+    ldc.r8 15.0
+    sub
+    ldloc.s 3
+    ldfld class Color StyleTheme::'text_color'
+    ldloc.s 3
+    ldfld float64 StyleTheme::'axis_label_font_size'
+    call int32 TKVApp::'svg_draw_text'(class SvgRenderer, string, float64, float64, class Color, float64)
+    pop
+  figure_to_svg_If44_else:
     ldloc.s 2
     call string TKVApp::'svg_build'(class SvgRenderer)
+    ret
+  }
+  .method public static string 'figure_to_interactive_html'(class Figure 'fig') cil managed
+  {
+    .maxstack 10
+    .locals init (string 'svg_str', class StyleTheme 'th', string 'html', valuetype TkvInt '__tkvint_a', valuetype TkvInt '__tkvint_b', valuetype TkvInt '__tkvint_r', int64 '__tkvint_x', valuetype [System.Numerics]System.Numerics.Complex '__tkvcplx_str', object '__arr2d_src', object '__arr2d_dst', int32 '__arr2d_i', int32 '__arr2d_n')
+    ldarg.s 0
+    call string TKVApp::'figure_to_svg'(class Figure)
+    stloc.s 0
+    ldarg.s 0
+    ldfld class StyleTheme Figure::'theme'
+    stloc.s 1
+    ldstr "<!DOCTYPE html>\n<html>\n<head>\n"
+    stloc.s 2
+    ldloc.s 2
+    ldstr "  <meta charset=\"utf-8\" />\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "  <title>TokenVector.Plot Interactive View</title>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "  <style>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    body { margin: 0; padding: 20px; background: "
+    call string [mscorlib]System.String::Concat(string, string)
+    ldloc.s 1
+    ldfld class Color StyleTheme::'bg_color'
+    call string TKVApp::'color_to_hex'(class Color)
+    call string [mscorlib]System.String::Concat(string, string)
+    ldstr "; font-family: "
+    call string [mscorlib]System.String::Concat(string, string)
+    ldloc.s 1
+    ldfld string StyleTheme::'font_family'
+    call string [mscorlib]System.String::Concat(string, string)
+    ldstr "; display: flex; flex-direction: column; align-items: center; justify-content: center; }\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    .chart-card { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    .controls { margin-top: 10px; display: flex; gap: 8px; }\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    button { padding: 6px 12px; border-radius: 4px; border: 1px solid #ccc; background: #fafafa; cursor: pointer; }\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    button:hover { background: #eee; }\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "  </style>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "</head>\n<body>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "  <div class=\"chart-card\">\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    <div id=\"svg-container\">\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "      "
+    call string [mscorlib]System.String::Concat(string, string)
+    ldloc.s 0
+    call string [mscorlib]System.String::Concat(string, string)
+    ldstr "\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    </div>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    <div class=\"controls\">\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "      <button onclick=\"window.print()\">Print / Save PDF</button>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "    </div>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "  </div>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
+    ldstr "</body>\n</html>\n"
+    call string [mscorlib]System.String::Concat(string, string)
+    stloc.s 2
+    ldloc.s 2
     ret
   }
   .method public static string 'run'() cil managed

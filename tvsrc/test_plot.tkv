@@ -70,6 +70,62 @@ def test_figure_svg() -> "i32":
     return 0
 
 
+def test_bar_chart() -> "i32":
+    fig = make_figure(4.0, 3.0, 100.0)
+    xs = [1.0, 2.0, 3.0]
+    ys = [10.0, 25.0, 15.0]
+    bar = make_bar_plot(xs, ys, "Sales", color_green())
+    ax = fig.axes
+    axes2d_add_element(ax, bar)
+    svg = figure_to_svg(fig)
+    if len(svg) < 100:
+        return 1
+    return 0
+
+
+def test_heatmap_chart() -> "i32":
+    fig = make_figure(4.0, 3.0, 100.0)
+    grid = [
+        1.0, 2.0, 3.0,
+        4.0, 5.0, 6.0,
+        7.0, 8.0, 9.0
+    ]
+    hm = make_heatmap_plot(grid, 3, 3, "Matrix", color_blue())
+    ax = fig.axes
+    axes2d_add_element(ax, hm)
+    svg = figure_to_svg(fig)
+    if len(svg) < 100:
+        return 1
+    return 0
+
+
+def test_box_plot() -> "i32":
+    fig = make_figure(4.0, 3.0, 100.0)
+    # series_idx=1.0, min=5.0, q1=10.0, med=15.0, q3=22.0, max=30.0
+    box = make_box_plot(1.0, 5.0, 10.0, 15.0, 22.0, 30.0, "DistA", color_blue())
+    ax = fig.axes
+    axes2d_add_element(ax, box)
+    svg = figure_to_svg(fig)
+    if len(svg) < 100:
+        return 1
+    return 0
+
+
+def test_interactive_html() -> "i32":
+    fig = make_figure(4.0, 3.0, 100.0)
+    xs = [0.0, 1.0, 2.0]
+    ys = [3.0, 1.0, 4.0]
+    line = make_line_plot(xs, ys, "Series", color_blue(), 2.0)
+    ax = fig.axes
+    axes2d_add_element(ax, line)
+    html = figure_to_interactive_html(fig)
+    if len(html) < 200:
+        return 1
+    if not html.startswith("<!DOCTYPE html>"):
+        return 2
+    return 0
+
+
 def run_all_tests() -> "str":
     rc1 = test_color()
     if rc1 != 0:
@@ -91,4 +147,20 @@ def run_all_tests() -> "str":
     if rc5 != 0:
         return "FAIL_SVG_" + str(rc5)
 
-    return "ALL_TESTS_PASS (5/5 suites green)"
+    rc6 = test_bar_chart()
+    if rc6 != 0:
+        return "FAIL_BAR_" + str(rc6)
+
+    rc7 = test_heatmap_chart()
+    if rc7 != 0:
+        return "FAIL_HEATMAP_" + str(rc7)
+
+    rc8 = test_box_plot()
+    if rc8 != 0:
+        return "FAIL_BOX_" + str(rc8)
+
+    rc9 = test_interactive_html()
+    if rc9 != 0:
+        return "FAIL_HTML_" + str(rc9)
+
+    return "ALL_TESTS_PASS (9/9 suites green)"
